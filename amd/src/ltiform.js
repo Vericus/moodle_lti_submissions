@@ -1,0 +1,88 @@
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * AMD module for the lti form in assignsubmission_ltisubmissions page.
+ *
+ * @module     assignsubmission_ltisubmissions/ltiform
+ * @copyright  2023 Moodle India
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+import $ from 'jquery';
+import {get_string as getString} from 'core/str';
+export const init = (hideoptions) => {
+    $(document).on('click', '#id_assignsubmission_ltisubmissions_enabled', function(){
+        var ltisubmissionname = $(this).attr('name');
+        if($(this).is(':checked')){
+            $('#fgroup_id_submissionplugins').find(':checkbox').each(function(){
+                var elementname = $(this).attr('name');
+                if(ltisubmissionname != elementname &&
+                elementname.startsWith('assignsubmission_') && elementname.endsWith('_enabled')){
+                    if($(this).is(':checked')){
+                        $(this).trigger('click');
+                    }
+                    $(this).attr('disabled', true);
+                }
+            });
+        }else{
+            $('#fgroup_id_submissionplugins').find(':checkbox').each(function(){
+                var elementname = $(this).attr('name');
+                if(ltisubmissionname != elementname && elementname.startsWith('assignsubmission_')
+                && elementname.endsWith('_enabled')){
+                    $(this).attr('disabled', false);
+                }
+            });
+        }
+    });
+    $(document).ready(function(){
+        if($('#id_assignsubmission_ltisubmissions_enabled').is(':checked')){
+            if(hideoptions){// cannot edit if the activity is once defined as of type ltisubmission
+                $('#fgroup_id_submissionplugins').hide();
+            }
+            var ltisubmissionname = $('#id_assignsubmission_ltisubmissions_enabled').attr('name');
+            $('#fgroup_id_submissionplugins').find(':checkbox').each(function(){
+                var elementname = $(this).attr('name');
+                if(ltisubmissionname != elementname && elementname.startsWith('assignsubmission_')
+                && elementname.endsWith('_enabled')){
+                    if($(this).is(':checked')){
+                        $(this).trigger('click');
+                    }
+                    $(this).attr('disabled', true);
+                }
+            });
+        }
+    });
+    $(document).find("form[action='modedit.php']").on( "submit", function() {
+        var formData = $(this).serializeArray();
+        var data = [];
+        $.each(formData, function(index, field){
+            data[field.name] = field.value;
+        });
+        if (data.assignsubmission_ltisubmissions_enabled == 1 && data.typeid == 0) {
+            $('#id_typeid').addClass('is-invalid');
+            getString('invalidtypeid', 'assignsubmission_ltisubmissions').then(function (error) {
+                $('#id_error_typeid').html(error);
+            }.bind(this));
+            document.getElementById("id_typeid").scrollIntoView();
+            return false;
+        } else {
+            if($('#id_typeid').hasClass('is-invalid')) {
+                $('#id_typeid').removeClass('is-invalid');
+                $('#id_error_typeid').html('');
+            }
+            return true;
+        }
+    });
+};
