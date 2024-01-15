@@ -37,8 +37,7 @@ $settings->add(new admin_setting_configtext('assignsubmission_ltisubmissions/fin
 
 $query = "SELECT id, name
                 FROM {lti_types}
-               WHERE coursevisible  = 0
-                 AND course = 1
+               WHERE course = 1
                  AND state = 1
             ORDER BY name ASC";
 $options = $DB->get_records_sql_menu($query);
