@@ -22,6 +22,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 defined('MOODLE_INTERNAL') || die();
+global $DB;
 $settings->add(new admin_setting_configcheckbox('assignsubmission_ltisubmissions/default',
                    new lang_string('default', 'assignsubmission_ltisubmissions'),
                    new lang_string('default_help', 'assignsubmission_ltisubmissions'), 1));
@@ -34,4 +35,13 @@ $settings->add(new admin_setting_configtext('assignsubmission_ltisubmissions/fin
                    new lang_string('finalfiles', 'assignsubmission_ltisubmissions'),
                    new lang_string('finalfiles_help', 'assignsubmission_ltisubmissions'), 1, PARAM_INT));
 
-
+$query = "SELECT id, name
+                FROM {lti_types}
+               WHERE coursevisible  = 0
+                 AND course = 1
+                 AND state = 1
+            ORDER BY name ASC";
+$options = $DB->get_records_sql_menu($query);
+$settings->add(new admin_setting_configmultiselect('assignsubmission_ltisubmissions/defaulttypeids',
+                   new lang_string('defaulttypeids', 'assignsubmission_ltisubmissions'),
+                   new lang_string('defaulttypeids_help', 'assignsubmission_ltisubmissions'), [], $options));

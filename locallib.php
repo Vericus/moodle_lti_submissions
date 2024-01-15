@@ -53,12 +53,8 @@ class assign_submission_ltisubmissions extends \assign_submission_plugin {
      * @return void
      */
     public function get_settings(MoodleQuickForm $mform) {
-        global $CFG, $COURSE, $PAGE, $OUTPUT;
+        global $CFG, $COURSE, $PAGE, $OUTPUT, $DB;
         require_once($CFG->dirroot.'/mod/lti/locallib.php');
-        // Type ID parameter being passed when adding an preconfigured tool from activity chooser.
-        $typeid = optional_param('typeid', false, PARAM_INT);
-
-        $showtypes = !$typeid;
 
         $this->typeid = 0;
         $hideoptions = 0;
@@ -78,60 +74,22 @@ class assign_submission_ltisubmissions extends \assign_submission_plugin {
         // Array of tool type IDs that don't support ContentItemSelectionRequest.
         $noncontentitemtypes = [];
 
-        if ($showtypes) {
-            $tooltypes = $mform->addElement('select', 'typeid', get_string('external_tool_type', 'lti'));
-            if ($typeid) {
-                $mform->getElement('typeid')->setValue($typeid);
-            }
-            $mform->addHelpButton('typeid', 'external_tool_type', 'lti');
-
-            foreach (lti_get_types_for_add_instance() as $id => $type) {
-                if (!empty($type->toolproxyid)) {
-                    $toolproxy[] = $type->id;
-                    $attributes = ['globalTool' => 1, 'toolproxy' => 1];
-                    $enabledcapabilities = explode("\n", $type->enabledcapability);
-                    if (!in_array('Result.autocreate', $enabledcapabilities) ||
-                        in_array('BasicOutcome.url', $enabledcapabilities)) {
-                        $attributes['nogrades'] = 1;
-                    }
-                    if (!in_array('Person.name.full', $enabledcapabilities) &&
-                        !in_array('Person.name.family', $enabledcapabilities) &&
-                        !in_array('Person.name.given', $enabledcapabilities)) {
-                        $attributes['noname'] = 1;
-                    }
-                    if (!in_array('Person.email.primary', $enabledcapabilities)) {
-                        $attributes['noemail'] = 1;
-                    }
-                } else if ($type->course == $COURSE->id) {
-                    $attributes = ['editable' => 1, 'courseTool' => 1, 'domain' => $type->tooldomain];
-                } else if ($id != 0) {
-                    $attributes = ['globalTool' => 1, 'domain' => $type->tooldomain];
-                } else {
-                    $attributes = [];
-                }
-
-                if ($id) {
-                    $config = lti_get_type_config($id);
-                    if (!empty($config['contentitem'])) {
-                        $attributes['data-contentitem'] = 1;
-                        $attributes['data-id'] = $id;
-                    } else {
-                        $noncontentitemtypes[] = $id;
-                    }
-                }
-                $tooltypes->addOption($type->name, $id, $attributes);
-            }
+        $defaulttypeids = get_config('assignsubmission_ltisubmissions', 'defaulttypeids');
+        $defaulttypeids = explode(',', $defaulttypeids);
+        if (!empty($defaulttypeids)) {
+            list($typesql, $typesparams) = $DB->get_in_or_equal($defaulttypeids, SQL_PARAMS_NAMED, 'types');
         } else {
-            $mform->addElement('hidden', 'typeid', $typeid);
-            $mform->setType('typeid', PARAM_INT);
-            if ($typeid) {
-                $config = lti_get_type_config($typeid);
-                if (!empty($config['contentitem'])) {
-                    $mform->addElement('hidden', 'contentitem', 1);
-                    $mform->setType('contentitem', PARAM_INT);
-                }
-            }
+            $typesql = ' = id ';
+            $typesparams = [];
         }
+        $query = "SELECT id, name
+                FROM {lti_types}
+               WHERE course = 1 AND id {$typesql}
+            ORDER BY name ASC";
+        $defaultselect = [0 => get_string('select_tool', 'assignsubmission_ltisubmissions')];
+        $options = $defaultselect + $DB->get_records_sql_menu($query, $typesparams);
+        $tooltypes = $mform->addElement('select', 'typeid', get_string('external_tool_type', 'lti'), $options);
+        $mform->addHelpButton('typeid', 'external_tool_type', 'lti');
         $mform->setDefault('typeid', $typeidsubmissions);
         $mform->hideIf('typeid', 'assignsubmission_ltisubmissions_enabled', 'notchecked');
 
@@ -164,47 +122,6 @@ class assign_submission_ltisubmissions extends \assign_submission_plugin {
                               'assignsubmission_ltisubmissions');
         $mform->setDefault('final_maxfiles', $finalfilesubmissions);
         $mform->hideIf('final_maxfiles', 'assignsubmission_ltisubmissions_enabled', 'notchecked');
-
-        $editurl = new moodle_url('/mod/lti/instructor_edit_tool_type.php',
-                ['sesskey' => sesskey(), 'course' => $COURSE->id]);
-        $ajaxurl = new moodle_url('/mod/lti/ajax.php');
-        $jsinfo = (object)[
-                        'edit_icon_url' => (string)$OUTPUT->image_url('t/edit'),
-                        'add_icon_url' => (string)$OUTPUT->image_url('t/add'),
-                        'delete_icon_url' => (string)$OUTPUT->image_url('t/delete'),
-                        'green_check_icon_url' => (string)$OUTPUT->image_url('i/valid'),
-                        'warning_icon_url' => (string)$OUTPUT->image_url('warning', 'lti'),
-                        'instructor_tool_type_edit_url' => $editurl->out(false),
-                        'ajax_url' => $ajaxurl->out(true),
-                        'courseId' => $COURSE->id,
-                  ];
-
-        $module = [
-            'name' => 'mod_lti_edit',
-            'fullpath' => '/mod/lti/mod_form.js',
-            'requires' => ['base', 'io', 'querystring-stringify-simple', 'node', 'event', 'json-parse'],
-            'strings' => [
-                ['addtype', 'lti'],
-                ['edittype', 'lti'],
-                ['deletetype', 'lti'],
-                ['delete_confirmation', 'lti'],
-                ['cannot_edit', 'lti'],
-                ['cannot_delete', 'lti'],
-                ['global_tool_types', 'lti'],
-                ['course_tool_types', 'lti'],
-                ['using_tool_configuration', 'lti'],
-                ['using_tool_cartridge', 'lti'],
-                ['domain_mismatch', 'lti'],
-                ['custom_config', 'lti'],
-                ['tool_config_not_found', 'lti'],
-                ['tooltypeadded', 'lti'],
-                ['tooltypedeleted', 'lti'],
-                ['tooltypenotdeleted', 'lti'],
-                ['tooltypeupdated', 'lti'],
-                ['forced_help', 'lti'],
-            ],
-        ];
-        $PAGE->requires->js_init_call('M.mod_lti.editor.init', [json_encode($jsinfo)], true, $module);
         $PAGE->requires->js_call_amd('assignsubmission_ltisubmissions/ltiform', 'init', [$hideoptions]);
     }
 
