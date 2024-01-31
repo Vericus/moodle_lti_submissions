@@ -1,7 +1,10 @@
 # LTI Submissions Plugin
 
-## 2024-01-15
+## 2024-01-30
 
+- Fix sanitisation of tool selection when pre-existing automated tool option was selected.
+
+## 2024-01-15
 
 - Add LTI tool whitelist to global configuration. 
 
