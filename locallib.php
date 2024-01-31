@@ -76,6 +76,11 @@ class assign_submission_ltisubmissions extends \assign_submission_plugin {
 
         $defaulttypeids = get_config('assignsubmission_ltisubmissions', 'defaulttypeids');
         $defaulttypeids = explode(',', $defaulttypeids);
+        foreach ($defaulttypeids as $key => $value) {
+            if (!is_int($value)) {
+                unset($defaulttypeids[$key]);
+            }
+        }
         if (!empty($defaulttypeids)) {
             list($typesql, $typesparams) = $DB->get_in_or_equal($defaulttypeids, SQL_PARAMS_NAMED, 'types');
         } else {
