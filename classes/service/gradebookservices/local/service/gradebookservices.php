@@ -317,7 +317,8 @@ class gradebookservices extends service_base {
             }
             $cmid = $DB->get_field_sql("SELECT cm.id FROM {course_modules} cm
                 JOIN {modules} m on m.id = cm.module
-                WHERE cm.instance = :assigninstance ", ['assigninstance' => $modassign]);
+                WHERE cm.instance = :assigninstance
+                LIMIT 1 ", ['assigninstance' => $modassign]);
             $launchparameters['moodle_grader_url'] = "$CFG->wwwroot/mod/assign/view.php?id={$cmid}&action=grader&userid={$userid}";
         }
         return $launchparameters;
