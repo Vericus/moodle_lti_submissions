@@ -1,5 +1,11 @@
 # LTI Submissions Plugin
 
+## 2024-05-17
+
+- Fix `LIMIT 1` not used when querying and expecting a single course module
+- Update plugin incompatibility version to Moodle 405
+- Create and release patches for Moodle 401, 402, 403, 404
+
 ## 2024-01-30
 
 - Fix sanitisation of tool selection when pre-existing automated tool option was selected.
