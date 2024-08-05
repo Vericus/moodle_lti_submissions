@@ -23,8 +23,8 @@
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
                 <FIELD NAME="itemid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
-                <FIELD NAME="iteminfo" TYPE="TEXT" NOTNULL="false" SEQUENCE="false"/>
-                <FIELD NAME="scoreinfo" TYPE="TEXT" NOTNULL="false" SEQUENCE="false"/>
+                <FIELD NAME="iteminfo" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+                <FIELD NAME="scoreinfo" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
                 <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
                 <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
             </FIELDS>
