@@ -583,7 +583,7 @@ class gradebookservices extends service_base {
                 JOIN {grade_items} gi ON gi.iteminstance = cm.instance
                 JOIN {modules} m ON m.name LIKE gi.itemmodule AND gi.itemtype LIKE 'mod' AND m.id = cm.module
                 WHERE gi.id = :gradeitemid ", ['gradeitemid' => $gradeitem->id], MUST_EXIST);
-            list($course, $cm) = get_course_and_cm_from_cmid($cmid, 'assign');
+            [$course, $cm] = get_course_and_cm_from_cmid($cmid, 'assign');
             $context = \context_module::instance($cm->id);
             $assign = new \assign($context, $cm, $course);
             $assignsubmission = new \assign_submission_ltisubmissions($assign, 'ltisubmissions');
