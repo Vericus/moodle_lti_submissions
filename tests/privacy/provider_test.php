@@ -39,10 +39,10 @@ class provider_test extends \mod_assign\privacy\provider_test {
     /**
      * Convenience function for creating feedback data.
      *
-     * @param  object   $assign         assign object
-     * @param  stdClass $student        user object
-     * @param  string   $filename       filename for the file submission
-     * @return array   Submission plugin object and the submission object.
+     * @param object $assign assign object
+     * @param \stdClass $student user object
+     * @param string $filename filename for the file submission
+     * @return array Submission plugin object and the submission object.
      */
     protected function create_ltisubmissions_submission($assign, $student, $filename) {
         global $CFG;
@@ -51,11 +51,12 @@ class provider_test extends \mod_assign\privacy\provider_test {
         $this->setUser($student->id);
         $submissioninfo = new \stdClass();
         $url = $CFG->dirroot . '/mod/assign/submission/ltisubmissions/tests/fixtures/submission.pdf';
-        $submissioninfo->{'https://api.cadmus.io/lti/submission'} =
-            (object) ['submission_type' => 'final',
-                'content_items' => [(object) ['url' => $url, 'title' => $filename],
-                ],
-            ];
+        $submissioninfo->{'https://api.cadmus.io/lti/submission'} = (object) [
+            'submission_type' => 'final',
+            'content_items' => [
+                (object) ['url' => $url, 'title' => $filename],
+            ],
+        ];
         $submissioninfo->userid = $student->id;
         $plugin = $assign->get_submission_plugin_by_type('ltisubmissions');
         $plugin->save($submission, $submissioninfo);
@@ -86,7 +87,9 @@ class provider_test extends \mod_assign\privacy\provider_test {
         $user2 = $this->getDataGenerator()->create_user();
         $this->getDataGenerator()->enrol_user($user1->id, $course->id, 'student');
         $this->getDataGenerator()->enrol_user($user2->id, $course->id, 'editingteacher');
-        $assign = $this->create_instance(['course' => $course, 'assignsubmission_ltisubmissions_enabled' => 1,
+        $assign = $this->create_instance([
+            'course' => $course,
+            'assignsubmission_ltisubmissions_enabled' => 1,
             'final_maxfiles' => 1,
             'draft_maxfiles' => 1,
             'typeid' => 1,
@@ -95,7 +98,7 @@ class provider_test extends \mod_assign\privacy\provider_test {
         $context = $assign->get_context();
 
         $studentfilename = 'user1file.pdf';
-        list($plugin, $submission) = $this->create_ltisubmissions_submission($assign, $user1, $studentfilename);
+        [$plugin, $submission] = $this->create_ltisubmissions_submission($assign, $user1, $studentfilename);
 
         $writer = \core_privacy\local\request\writer::with_context($context);
         $this->assertFalse($writer->has_any_data());
@@ -103,6 +106,9 @@ class provider_test extends \mod_assign\privacy\provider_test {
         // The student should have a file submission.
         $exportdata = new \mod_assign\privacy\assign_plugin_request_data($context, $assign, $submission, ['Attempt 1']);
         \assignsubmission_ltisubmissions\privacy\provider::export_submission_user_data($exportdata);
+
+        // Verify that the data has been exported.
+        $this->assertTrue($writer->has_any_data());
     }
 
     /**
@@ -129,9 +135,12 @@ class provider_test extends \mod_assign\privacy\provider_test {
         $context = $assign->get_context();
 
         $studentfilename = 'user1file.pdf';
-        list($plugin, $submission) = $this->create_ltisubmissions_submission($assign, $user1, $studentfilename);
+        [$plugin, $submission] = $this->create_ltisubmissions_submission($assign, $user1, $studentfilename);
         $student2filename = 'user2file.pdf';
-        list($plugin2, $submission2) = $this->create_ltisubmissions_submission($assign, $user2, $studentfilename);
+        [$plugin2, $submission2] = $this->create_ltisubmissions_submission($assign, $user2, $studentfilename);
+
+        $this->assertFalse($plugin->is_empty($submission));
+        $this->assertFalse($plugin2->is_empty($submission2));
 
         // Only need the context and assign object in this plugin for this operation.
         $requestdata = new \mod_assign\privacy\assign_plugin_request_data($context, $assign);
@@ -165,9 +174,12 @@ class provider_test extends \mod_assign\privacy\provider_test {
         $context = $assign->get_context();
 
         $studentfilename = 'user1file.pdf';
-        list($plugin, $submission) = $this->create_ltisubmissions_submission($assign, $user1, $studentfilename);
+        [$plugin, $submission] = $this->create_ltisubmissions_submission($assign, $user1, $studentfilename);
         $student2filename = 'user2file.pdf';
-        list($plugin2, $submission2) = $this->create_ltisubmissions_submission($assign, $user2, $studentfilename);
+        [$plugin2, $submission2] = $this->create_ltisubmissions_submission($assign, $user2, $studentfilename);
+
+        $this->assertFalse($plugin->is_empty($submission));
+        $this->assertFalse($plugin2->is_empty($submission2));
 
         // Only need the context and assign object in this plugin for this operation.
         $requestdata = new \mod_assign\privacy\assign_plugin_request_data($context, $assign, $submission, [], $user1);
@@ -214,15 +226,15 @@ class provider_test extends \mod_assign\privacy\provider_test {
         $context2 = $assign2->get_context();
 
         $student1filename = 'user1file.pdf';
-        list($plugin1, $submission1) = $this->create_ltisubmissions_submission($assign1, $user1, $student1filename);
+        [$plugin1, $submission1] = $this->create_ltisubmissions_submission($assign1, $user1, $student1filename);
         $student2filename = 'user2file.pdf';
-        list($plugin2, $submission2) = $this->create_ltisubmissions_submission($assign1, $user2, $student2filename);
+        [$plugin2, $submission2] = $this->create_ltisubmissions_submission($assign1, $user2, $student2filename);
         $student3filename = 'user3file.pdf';
-        list($plugin3, $submission3) = $this->create_ltisubmissions_submission($assign1, $user3, $student3filename);
+        [$plugin3, $submission3] = $this->create_ltisubmissions_submission($assign1, $user3, $student3filename);
         $student4filename = 'user4file.pdf';
-        list($plugin4, $submission4) = $this->create_ltisubmissions_submission($assign2, $user4, $student4filename);
+        [$plugin4, $submission4] = $this->create_ltisubmissions_submission($assign2, $user4, $student4filename);
         $student5filename = 'user5file.pdf';
-        list($plugin5, $submission5) = $this->create_ltisubmissions_submission($assign2, $user3, $student5filename);
+        [$plugin5, $submission5] = $this->create_ltisubmissions_submission($assign2, $user3, $student5filename);
 
         $submissionids = [
             $submission1->id,
@@ -238,14 +250,14 @@ class provider_test extends \mod_assign\privacy\provider_test {
         $this->assertCount(6, $data);
         $submissionids = $DB->get_fieldset_select('assign_submission', 'id',
             ' assignment = :assignid ', ['assignid' => $assign1->get_instance()->id]);
-        list($ltisubmissionsql, $ltisubmissionparams) = $DB->get_in_or_equal($submissionids, SQL_PARAMS_NAMED, 'ltisubid', true);
+        [$ltisubmissionsql, $ltisubmissionparams] = $DB->get_in_or_equal($submissionids, SQL_PARAMS_NAMED, 'ltisubid', true);
         $data = $DB->get_records_select('assignsubmission_ltisub', " submission $ltisubmissionsql", $ltisubmissionparams);
         $this->assertCount(3, $data);
 
         // Records in the second assignment (not being touched).
         $submissionids = $DB->get_fieldset_select('assign_submission', 'id',
             ' assignment = :assignid ', ['assignid' => $assign2->get_instance()->id]);
-        list($ltisubmissionsql, $ltisubmissionparams) = $DB->get_in_or_equal($submissionids, SQL_PARAMS_NAMED, 'ltisubid', true);
+        [$ltisubmissionsql, $ltisubmissionparams] = $DB->get_in_or_equal($submissionids, SQL_PARAMS_NAMED, 'ltisubid', true);
         $data = $DB->get_records_select('assignsubmission_ltisub', " submission $ltisubmissionsql", $ltisubmissionparams);
         $this->assertCount(2, $data);
 
@@ -259,14 +271,14 @@ class provider_test extends \mod_assign\privacy\provider_test {
         // Submission 1 and 3 have been removed. We should be left with submission2.
         $submissionids = $DB->get_fieldset_select('assign_submission', 'id',
             ' assignment = :assignid ', ['assignid' => $assign1->get_instance()->id]);
-        list($ltisubmissionsql, $ltisubmissionparams) = $DB->get_in_or_equal($submissionids, SQL_PARAMS_NAMED, 'ltisubid', true);
+        [$ltisubmissionsql, $ltisubmissionparams] = $DB->get_in_or_equal($submissionids, SQL_PARAMS_NAMED, 'ltisubid', true);
         $data = $DB->get_records_select('assignsubmission_ltisub', " submission $ltisubmissionsql", $ltisubmissionparams);
         $this->assertCount(1, $data);
 
         // This should be untouched.
         $submissionids = $DB->get_fieldset_select('assign_submission', 'id',
             ' assignment = :assignid ', ['assignid' => $assign2->get_instance()->id]);
-        list($ltisubmissionsql, $ltisubmissionparams) = $DB->get_in_or_equal($submissionids, SQL_PARAMS_NAMED, 'ltisubid', true);
+        [$ltisubmissionsql, $ltisubmissionparams] = $DB->get_in_or_equal($submissionids, SQL_PARAMS_NAMED, 'ltisubid', true);
         $data = $DB->get_records_select('assignsubmission_ltisub', " submission $ltisubmissionsql", $ltisubmissionparams);
         $this->assertCount(2, $data);
     }
