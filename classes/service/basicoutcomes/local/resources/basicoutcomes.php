@@ -17,9 +17,9 @@
 /**
  * This file contains a class definition for the Basic Outcomes resource
  *
- * @package    assignsubmission_ltisubmissions
- * @copyright 2023 Moodle India {@link https://moodle.com/in/}
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     assignsubmission_ltisubmissions
+ * @copyright   2023 Moodle India {@link https://moodle.com/in/}
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace assignsubmission_ltisubmissions\service\basicoutcomes\local\resources;
@@ -27,10 +27,10 @@ namespace assignsubmission_ltisubmissions\service\basicoutcomes\local\resources;
 /**
  * A resource implementing the Basic Outcomes service.
  *
- * @package    assignsubmission_ltisubmissions
- * @since      Moodle 3.7
- * @copyright 2023 Moodle India {@link https://moodle.com/in/}
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     assignsubmission_ltisubmissions
+ * @since       Moodle 3.7
+ * @copyright   2023 Moodle India {@link https://moodle.com/in/}
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class basicoutcomes extends \mod_lti\local\ltiservice\resource_base {
 }

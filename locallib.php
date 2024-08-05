@@ -18,9 +18,9 @@
  * This file contains the definition for the library class for LTI submission plugin
  *
  * This class provides all the functionality for the new assign module.
- * @copyright 2023 Moodle India {@link https://moodle.com/in/}
- * @package    assignsubmission_ltisubmissions
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     assignsubmission_ltisubmissions
+ * @copyright   2023 Moodle India {@link https://moodle.com/in/}
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
@@ -29,14 +29,15 @@ defined('MOODLE_INTERNAL') || die();
 define('ASSIGNSUBMISSION_LTISUBMISSIONS_MAXSUMMARYFILES', 5);
 define('ASSIGNSUBMISSION_LTISUBMISSIONS_FINAL_FILEAREA', 'ltisubmission_final_files');
 define('ASSIGNSUBMISSION_LTISUBMISSIONS_DRAFT_FILEAREA', 'ltisubmission_draft_files');
-require_once($CFG->dirroot.'/mod/assign/submission/ltisubmissions/lib.php');
-require_once($CFG->dirroot.'/mod/assign/submissionplugin.php');
+require_once($CFG->dirroot . '/mod/assign/submission/ltisubmissions/lib.php');
+require_once($CFG->dirroot . '/mod/assign/submissionplugin.php');
+
 /**
  * library class for lti submission.
  *
- * @package    assignsubmission_ltisubmissions
- * @copyright 2023 Moodle India {@link https://moodle.com/in/}
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     assignsubmission_ltisubmissions
+ * @copyright   2023 Moodle India {@link https://moodle.com/in/}
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class assign_submission_ltisubmissions extends \assign_submission_plugin {
     /**
@@ -46,6 +47,7 @@ class assign_submission_ltisubmissions extends \assign_submission_plugin {
     public function get_name() {
         return get_string('ltisubmissions', 'assignsubmission_ltisubmissions');
     }
+    
     /**
      * Get the default setting for file submission plugin
      *
@@ -54,7 +56,7 @@ class assign_submission_ltisubmissions extends \assign_submission_plugin {
      */
     public function get_settings(MoodleQuickForm $mform) {
         global $CFG, $COURSE, $PAGE, $OUTPUT, $DB;
-        require_once($CFG->dirroot.'/mod/lti/locallib.php');
+        require_once($CFG->dirroot . '/mod/lti/locallib.php');
 
         $this->typeid = 0;
         $hideoptions = 0;
@@ -105,8 +107,8 @@ class assign_submission_ltisubmissions extends \assign_submission_plugin {
         $mform->addElement('select', 'draft_maxfiles',
             get_string('maxdraftfilessubmission', 'assignsubmission_ltisubmissions'), $draftoptions);
         $mform->addHelpButton('draft_maxfiles',
-                              'maxdraftfilessubmission',
-                              'assignsubmission_ltisubmissions');
+            'maxdraftfilessubmission',
+            'assignsubmission_ltisubmissions');
         $mform->setDefault('draft_maxfiles', $draftfilesubmissions);
         $mform->hideIf('draft_maxfiles', 'assignsubmission_ltisubmissions_enabled', 'notchecked');
 
@@ -118,8 +120,8 @@ class assign_submission_ltisubmissions extends \assign_submission_plugin {
         $mform->addElement('select', 'final_maxfiles',
             get_string('maxfinalfilessubmission', 'assignsubmission_ltisubmissions'), $finaloptions);
         $mform->addHelpButton('final_maxfiles',
-                              'maxfinalfilessubmission',
-                              'assignsubmission_ltisubmissions');
+            'maxfinalfilessubmission',
+            'assignsubmission_ltisubmissions');
         $mform->setDefault('final_maxfiles', $finalfilesubmissions);
         $mform->hideIf('final_maxfiles', 'assignsubmission_ltisubmissions_enabled', 'notchecked');
         $PAGE->requires->js_call_amd('assignsubmission_ltisubmissions/ltiform', 'init', [$hideoptions]);
@@ -154,6 +156,7 @@ class assign_submission_ltisubmissions extends \assign_submission_plugin {
         }
         return true;
     }
+
     /**
      * Basic LTI launch for assignment submission.
      *
@@ -185,6 +188,7 @@ class assign_submission_ltisubmissions extends \assign_submission_plugin {
             }
         }
     }
+
     /**
      * Save the files and trigger plagiarism plugin, if enabled,
      * to scan the uploaded files via events trigger
@@ -262,6 +266,7 @@ class assign_submission_ltisubmissions extends \assign_submission_plugin {
         }
         return $return;
     }
+
     /**
      * Save the files and trigger plagiarism plugin, if enabled,
      * to scan the uploaded files via events trigger
@@ -290,6 +295,7 @@ class assign_submission_ltisubmissions extends \assign_submission_plugin {
         $ltiscore->userid = $userid;
         return $this->assignment->save_submission($ltiscore, $notices);
     }
+
     /**
      * Determine if a submission is empty
      *
@@ -313,6 +319,7 @@ class assign_submission_ltisubmissions extends \assign_submission_plugin {
         }
         return $return;
     }
+
     /**
      * Remove files from this submission.
      *
@@ -323,15 +330,16 @@ class assign_submission_ltisubmissions extends \assign_submission_plugin {
         $fs = get_file_storage();
 
         $fs->delete_area_files($this->assignment->get_context()->id,
-                               'assignsubmission_ltisubmissions',
-                               ASSIGNSUBMISSION_LTISUBMISSIONS_FINAL_FILEAREA,
-                               $submission->id);
+            'assignsubmission_ltisubmissions',
+            ASSIGNSUBMISSION_LTISUBMISSIONS_FINAL_FILEAREA,
+            $submission->id);
         $fs->delete_area_files($this->assignment->get_context()->id,
-                               'assignsubmission_ltisubmissions',
-                               ASSIGNSUBMISSION_LTISUBMISSIONS_DRAFT_FILEAREA,
-                               $submission->id);
+            'assignsubmission_ltisubmissions',
+            ASSIGNSUBMISSION_LTISUBMISSIONS_DRAFT_FILEAREA,
+            $submission->id);
         return true;
     }
+
     /**
      * Produce a list of files suitable for export that represent this feedback or submission
      *
@@ -344,18 +352,18 @@ class assign_submission_ltisubmissions extends \assign_submission_plugin {
         $fs = get_file_storage();
         // Final Files.
         $files = $fs->get_area_files($this->assignment->get_context()->id,
-                                     'assignsubmission_ltisubmissions',
-                                     ASSIGNSUBMISSION_LTISUBMISSIONS_FINAL_FILEAREA,
-                                     $submission->id,
-                                     'timemodified DESC',
-                                     false);
+            'assignsubmission_ltisubmissions',
+            ASSIGNSUBMISSION_LTISUBMISSIONS_FINAL_FILEAREA,
+            $submission->id,
+            'timemodified DESC',
+            false);
 
         foreach ($files as $file) {
             // Do we return the full folder path or just the file name?
             if (isset($submission->exportfullpath) && $submission->exportfullpath == false) {
                 $result[$file->get_filename()] = $file;
             } else {
-                $result[$file->get_filepath().$file->get_filename()] = $file;
+                $result[$file->get_filepath() . $file->get_filename()] = $file;
             }
             if (isset($submission->sendfinalsubmission) && $submission->sendfinalsubmission) {
                 return $result;
@@ -364,18 +372,18 @@ class assign_submission_ltisubmissions extends \assign_submission_plugin {
         }
         // Draft Files.
         $files = $fs->get_area_files($this->assignment->get_context()->id,
-                                     'assignsubmission_ltisubmissions',
-                                     ASSIGNSUBMISSION_LTISUBMISSIONS_DRAFT_FILEAREA,
-                                     $submission->id,
-                                     'timemodified DESC',
-                                     false);
+            'assignsubmission_ltisubmissions',
+            ASSIGNSUBMISSION_LTISUBMISSIONS_DRAFT_FILEAREA,
+            $submission->id,
+            'timemodified DESC',
+            false);
 
         foreach ($files as $file) {
             // Do we return the full folder path or just the file name?
             if (isset($submission->exportfullpath) && $submission->exportfullpath == false) {
                 $result[$file->get_filename()] = $file;
             } else {
-                $result[$file->get_filepath().$file->get_filename()] = $file;
+                $result[$file->get_filepath() . $file->get_filename()] = $file;
             }
             if (isset($submission->sendfinalsubmission) && $submission->sendfinalsubmission) {
                 return $result;
@@ -384,6 +392,7 @@ class assign_submission_ltisubmissions extends \assign_submission_plugin {
         }
         return $result;
     }
+
     /**
      * Count the number of files
      *
@@ -394,13 +403,14 @@ class assign_submission_ltisubmissions extends \assign_submission_plugin {
     private function count_files($submissionid, $area) {
         $fs = get_file_storage();
         $files = $fs->get_area_files($this->assignment->get_context()->id,
-                                     'assignsubmission_ltisubmissions',
-                                     $area,
-                                     $submissionid,
-                                     'id',
-                                     false);
+            'assignsubmission_ltisubmissions',
+            $area,
+            $submissionid,
+            'id',
+            false);
         return count($files);
     }
+
     /**
      * Return true if there are no submission files
      * @param stdClass $submission
@@ -410,6 +420,7 @@ class assign_submission_ltisubmissions extends \assign_submission_plugin {
         $finalfiles = $this->count_files($submission->id, ASSIGNSUBMISSION_LTISUBMISSIONS_FINAL_FILEAREA);
         return $draftfiles + $finalfiles == 0;
     }
+
     /**
      * Display the list of files  in the submission status table
      *
@@ -417,9 +428,10 @@ class assign_submission_ltisubmissions extends \assign_submission_plugin {
      * @param bool $showviewlink Set this to true if the list of files is long
      * @return string
      */
-    public function view_summary(stdClass $submission, & $showviewlink) {
+    public function view_summary(stdClass $submission, &$showviewlink) {
         return $this->view($submission);
     }
+
     /**
      * No full submission view - the summary contains the list of files and that is the whole submission
      *
@@ -428,10 +440,10 @@ class assign_submission_ltisubmissions extends \assign_submission_plugin {
      */
     public function view($submission) {
         $return = $this->assignment->render_area_files(
-                'assignsubmission_ltisubmissions',
-                ASSIGNSUBMISSION_LTISUBMISSIONS_DRAFT_FILEAREA,
-                $submission->id
-            );
+            'assignsubmission_ltisubmissions',
+            ASSIGNSUBMISSION_LTISUBMISSIONS_DRAFT_FILEAREA,
+            $submission->id
+        );
         $return .= $this->assignment->render_area_files(
             'assignsubmission_ltisubmissions',
             ASSIGNSUBMISSION_LTISUBMISSIONS_FINAL_FILEAREA,

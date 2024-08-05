@@ -17,9 +17,9 @@
 /**
  * This file contains an abstract definition of an LTI resource
  *
- * @package    assignsubmission_ltisubmissions
- * @copyright 2023 Moodle India {@link https://moodle.com/in/}
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     assignsubmission_ltisubmissions
+ * @copyright   2023 Moodle India {@link https://moodle.com/in/}
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 
@@ -267,7 +267,7 @@ abstract class resource_base {
     public function check_tool_proxy($toolproxyguid, $body = null) {
 
         debugging('check_tool_proxy() is deprecated to allow LTI 1 connections to support services. ' .
-                  'Please use resource_base::check_tool() instead.', DEBUG_DEVELOPER);
+            'Please use resource_base::check_tool() instead.', DEBUG_DEVELOPER);
         $ok = false;
         if ($this->get_service()->check_tool_proxy($toolproxyguid, $body)) {
             $toolproxyjson = $this->get_service()->get_tool_proxy()->toolproxy;
@@ -311,7 +311,7 @@ abstract class resource_base {
      */
     public function check_type($typeid, $contextid, $permissionrequested, $body = null) {
         debugging('check_type() is deprecated to allow LTI 1 connections to support services. ' .
-                  'Please use resource_base::check_tool() instead.', DEBUG_DEVELOPER);
+            'Please use resource_base::check_tool() instead.', DEBUG_DEVELOPER);
         $ok = false;
         if ($this->get_service()->check_type($typeid, $contextid, $body)) {
             $neededpermissions = $this->get_permissions($typeid);
@@ -338,8 +338,8 @@ abstract class resource_base {
      * @see resource_base::check_tool()
      */
     public function get_permissions($ltitype) {
-        debugging('get_permissions() is deprecated to allow LTI 1 connections to support services. in '.$ltitype.' ' .
-                  'Please use resource_base::check_tool() instead.', DEBUG_DEVELOPER);
+        debugging('get_permissions() is deprecated to allow LTI 1 connections to support services. in ' . $ltitype . ' ' .
+            'Please use resource_base::check_tool() instead.', DEBUG_DEVELOPER);
         return [];
     }
 

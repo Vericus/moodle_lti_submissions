@@ -17,9 +17,9 @@
 /**
  * This file responds to a login authentication request
  *
- * @package    assignsubmission_ltisubmissions
- * @copyright 2023 Moodle India {@link https://moodle.com/in/}
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     assignsubmission_ltisubmissions
+ * @copyright   2023 Moodle India {@link https://moodle.com/in/}
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 require_once(__DIR__ . '/../../../../config.php');
@@ -52,8 +52,8 @@ $nonce = optional_param('nonce', '', PARAM_TEXT);
 $prompt = optional_param('prompt', '', PARAM_TEXT);
 
 $ok = !empty($scope) && !empty($responsetype) && !empty($clientid) &&
-      !empty($redirecturi) && !empty($loginhint) &&
-      !empty($nonce);
+    !empty($redirecturi) && !empty($loginhint) &&
+    !empty($nonce);
 
 if (!$ok) {
     $error = 'invalid_request';
@@ -140,7 +140,7 @@ if (isset($state)) {
 }
 unset($SESSION->lti_message_hint);
 $r = '<form action="' . $redirecturi . "\" name=\"ltiAuthForm\" id=\"ltiAuthForm\" " .
-     "method=\"post\" enctype=\"application/x-www-form-urlencoded\">\n";
+    "method=\"post\" enctype=\"application/x-www-form-urlencoded\">\n";
 if (!empty($params)) {
     foreach ($params as $key => $value) {
         $key = htmlspecialchars($key, ENT_COMPAT);

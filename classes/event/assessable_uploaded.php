@@ -17,9 +17,9 @@
 /**
  * The assignsubmission_file assessable uploaded event.
  *
- * @package    assignsubmission_ltisubmissions
- * @copyright 2023 Moodle India {@link https://moodle.com/in/}
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     assignsubmission_ltisubmissions
+ * @copyright   2023 Moodle India {@link https://moodle.com/in/}
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace assignsubmission_ltisubmissions\event;
@@ -27,9 +27,9 @@ namespace assignsubmission_ltisubmissions\event;
 /**
  * The assignsubmission_ltisubmission assessable uploaded event class.
  *
- * @package    assignsubmission_ltisubmissions
- * @copyright 2023 Moodle India {@link https://moodle.com/in/}
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     assignsubmission_ltisubmissions
+ * @copyright   2023 Moodle India {@link https://moodle.com/in/}
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class assessable_uploaded extends \core\event\assessable_uploaded {
 
@@ -100,7 +100,7 @@ class assessable_uploaded extends \core\event\assessable_uploaded {
     /**
      * Sets the legacy event data.
      *
-     * @param stdClass $legacyfiles legacy event data.
+     * @param \stdClass $legacyfiles legacy event data.
      * @return void
      */
     public function set_legacy_files($legacyfiles) {

@@ -34,9 +34,9 @@ require_once($CFG->dirroot . '/mod/assign/tests/generator.php');
 /**
  * The events_test test event class.
  *
- * @package    assignsubmission_ltisubmissions
- * @copyright 2023 Moodle India {@link https://moodle.com/in/}
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     assignsubmission_ltisubmissions
+ * @copyright   2023 Moodle India {@link https://moodle.com/in/}
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class events_test extends \advanced_testcase {
 
@@ -70,10 +70,10 @@ class events_test extends \advanced_testcase {
         $course = $this->getDataGenerator()->create_course();
         $student = $this->getDataGenerator()->create_and_enrol($course, 'student');
         $assign = $this->create_instance($course, ['assignsubmission_ltisubmissions_enabled' => 1,
-                'final_maxfiles' => 1,
-                'draft_maxfiles' => 1,
-                'typeid' => 1,
-            ]);
+            'final_maxfiles' => 1,
+            'draft_maxfiles' => 1,
+            'typeid' => 1,
+        ]);
         $context = $assign->get_context();
 
         $this->setUser($student->id);
@@ -81,8 +81,9 @@ class events_test extends \advanced_testcase {
         $submissioninfo = new \stdClass();
         $submissioninfo->{'https://api.cadmus.io/lti/submission'} = (object) ['submission_type' => $submissiontype,
             'content_items' => [
-                (object)['url' => $CFG->dirroot.'/mod/assign/submission/ltisubmissions/tests/fixtures/submission.pdf',
-                'title' => $title,
+                (object) [
+                    'url' => $CFG->dirroot . '/mod/assign/submission/ltisubmissions/tests/fixtures/submission.pdf',
+                    'title' => $title,
                 ],
             ],
         ];

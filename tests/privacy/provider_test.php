@@ -50,12 +50,12 @@ class provider_test extends \mod_assign\privacy\provider_test {
         $submission = $assign->get_user_submission($student->id, true);
         $this->setUser($student->id);
         $submissioninfo = new \stdClass();
-        $url = $CFG->dirroot.'/mod/assign/submission/ltisubmissions/tests/fixtures/submission.pdf';
+        $url = $CFG->dirroot . '/mod/assign/submission/ltisubmissions/tests/fixtures/submission.pdf';
         $submissioninfo->{'https://api.cadmus.io/lti/submission'} =
             (object) ['submission_type' => 'final',
-                'content_items' => [(object)['url' => $url, 'title' => $filename],
-            ],
-        ];
+                'content_items' => [(object) ['url' => $url, 'title' => $filename],
+                ],
+            ];
         $submissioninfo->userid = $student->id;
         $plugin = $assign->get_submission_plugin_by_type('ltisubmissions');
         $plugin->save($submission, $submissioninfo);
@@ -87,10 +87,10 @@ class provider_test extends \mod_assign\privacy\provider_test {
         $this->getDataGenerator()->enrol_user($user1->id, $course->id, 'student');
         $this->getDataGenerator()->enrol_user($user2->id, $course->id, 'editingteacher');
         $assign = $this->create_instance(['course' => $course, 'assignsubmission_ltisubmissions_enabled' => 1,
-                'final_maxfiles' => 1,
-                'draft_maxfiles' => 1,
-                'typeid' => 1,
-            ]);
+            'final_maxfiles' => 1,
+            'draft_maxfiles' => 1,
+            'typeid' => 1,
+        ]);
 
         $context = $assign->get_context();
 
@@ -121,10 +121,10 @@ class provider_test extends \mod_assign\privacy\provider_test {
         $this->getDataGenerator()->enrol_user($user2->id, $course->id, 'student');
 
         $assign = $this->create_instance(['course' => $course, 'assignsubmission_ltisubmissions_enabled' => 1,
-                'final_maxfiles' => 1,
-                'draft_maxfiles' => 1,
-                'typeid' => 1,
-            ]);
+            'final_maxfiles' => 1,
+            'draft_maxfiles' => 1,
+            'typeid' => 1,
+        ]);
 
         $context = $assign->get_context();
 
@@ -157,10 +157,10 @@ class provider_test extends \mod_assign\privacy\provider_test {
         $this->getDataGenerator()->enrol_user($user2->id, $course->id, 'student');
 
         $assign = $this->create_instance(['course' => $course, 'assignsubmission_ltisubmissions_enabled' => 1,
-                'final_maxfiles' => 1,
-                'draft_maxfiles' => 1,
-                'typeid' => 1,
-            ]);
+            'final_maxfiles' => 1,
+            'draft_maxfiles' => 1,
+            'typeid' => 1,
+        ]);
 
         $context = $assign->get_context();
 
@@ -200,15 +200,15 @@ class provider_test extends \mod_assign\privacy\provider_test {
         $this->getDataGenerator()->enrol_user($user4->id, $course->id, 'student');
 
         $assign1 = $this->create_instance(['course' => $course, 'assignsubmission_ltisubmissions_enabled' => 1,
-                'final_maxfiles' => 1,
-                'draft_maxfiles' => 1,
-                'typeid' => 1,
-            ]);
+            'final_maxfiles' => 1,
+            'draft_maxfiles' => 1,
+            'typeid' => 1,
+        ]);
         $assign2 = $this->create_instance(['course' => $course, 'assignsubmission_ltisubmissions_enabled' => 1,
-                'final_maxfiles' => 1,
-                'draft_maxfiles' => 1,
-                'typeid' => 1,
-            ]);
+            'final_maxfiles' => 1,
+            'draft_maxfiles' => 1,
+            'typeid' => 1,
+        ]);
 
         $context1 = $assign1->get_context();
         $context2 = $assign2->get_context();

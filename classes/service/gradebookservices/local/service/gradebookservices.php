@@ -17,9 +17,9 @@
 /**
  * This file contains a class definition for the LTI Gradebook Services
  *
- * @package    assignsubmission_ltisubmissions
- * @copyright 2023 Moodle India {@link https://moodle.com/in/}
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     assignsubmission_ltisubmissions
+ * @copyright   2023 Moodle India {@link https://moodle.com/in/}
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace assignsubmission_ltisubmissions\service\gradebookservices\local\service;
@@ -161,7 +161,7 @@ class gradebookservices extends service_base {
      * @return array containing the target link URL and the custom params string to use.
      */
     public function override_endpoint(string $messagetype, string $targetlinkuri, ?string $customstr, int $courseid,
-            ?object $lti = null): array {
+        ?object $lti = null): array {
         global $DB;
         if ($messagetype == 'LtiSubmissionReviewRequest' && isset($lti->id)) {
             $conditions = ['courseid' => $courseid, 'ltilinkid' => $lti->id];
@@ -263,14 +263,14 @@ class gradebookservices extends service_base {
         // Only inject parameters if the service is enabled for this tool.
         if (isset($this->get_typeconfig()['ltiservice_gradesynchronization'])) {
             if ($this->get_typeconfig()['ltiservice_gradesynchronization'] == self::GRADEBOOKSERVICES_READ ||
-                    $this->get_typeconfig()['ltiservice_gradesynchronization'] == self::GRADEBOOKSERVICES_FULL) {
+                $this->get_typeconfig()['ltiservice_gradesynchronization'] == self::GRADEBOOKSERVICES_FULL) {
                 // Check for used in context is only needed because there is no explicit site tool - course relation.
                 if ($this->is_allowed_in_context($typeid, $courseid)) {
                     $id = null;
                     if (!is_null($modassign)) {
                         $conditions = ['courseid' => $courseid, 'itemtype' => 'mod',
-                                'itemmodule' => 'assign', 'iteminstance' => $modassign,
-                            ];
+                            'itemmodule' => 'assign', 'iteminstance' => $modassign,
+                        ];
 
                         $coupledlineitems = $DB->get_records('grade_items', $conditions);
                         $conditionsgbs = ['courseid' => $courseid, 'ltilinkid' => $modassign];
@@ -358,8 +358,8 @@ class gradebookservices extends service_base {
             foreach ($lineitems as $lineitem) {
                 $gbs = $this->find_ltiservice_gradebookservice_for_lineitem($lineitem->id);
                 if ($gbs && (!isset($tag) || (isset($tag) && $gbs->tag == $tag))
-                        && (!isset($ltilinkid) || (isset($ltilinkid) && $gbs->ltilinkid == $ltilinkid))
-                        && (!isset($resourceid) || (isset($resourceid) && $gbs->resourceid == $resourceid))) {
+                    && (!isset($ltilinkid) || (isset($ltilinkid) && $gbs->ltilinkid == $ltilinkid))
+                    && (!isset($resourceid) || (isset($resourceid) && $gbs->resourceid == $resourceid))) {
                     if (is_null($typeid)) {
                         if ($this->get_tool_proxy()->id == $gbs->toolproxyid) {
                             array_push($lineitemstoreturn, $lineitem);
@@ -370,8 +370,8 @@ class gradebookservices extends service_base {
                         }
                     }
                 } else if (($lineitem->itemtype == 'mod' && $lineitem->itemmodule == 'assign'
-                        && !isset($resourceid) && !isset($tag)
-                        && (!isset($ltilinkid) || (isset($ltilinkid)
+                    && !isset($resourceid) && !isset($tag)
+                    && (!isset($ltilinkid) || (isset($ltilinkid)
                         && $lineitem->iteminstance == $ltilinkid)))) {
                     // We will need to check if the activity related belongs to our tool proxy.
                     $ltiactivity = $DB->get_record('assign', ['id' => $lineitem->iteminstance]);
@@ -478,28 +478,28 @@ class gradebookservices extends service_base {
      * @return int id of the created gradeitem
      */
     public function add_standalone_lineitem(string $courseid, string $label, float $maximumscore,
-            string $baseurl, ?int $ltilinkid, ?string $resourceid, ?string $tag, int $typeid,
-            int $toolproxyid = null) : int {
+        string $baseurl, ?int $ltilinkid, ?string $resourceid, ?string $tag, int $typeid,
+        int $toolproxyid = null): int {
         global $DB;
         $params = [];
         $params['itemname'] = $label;
         $params['gradetype'] = GRADE_TYPE_VALUE;
-        $params['grademax']  = $maximumscore;
-        $params['grademin']  = 0;
+        $params['grademax'] = $maximumscore;
+        $params['grademin'] = 0;
         $item = new \grade_item(['id' => 0, 'courseid' => $courseid]);
         \grade_item::set_properties($item, $params);
         $item->itemtype = 'manual';
         $item->grademax = $maximumscore;
         $id = $item->insert('mod/ltiservice_gradebookservices');
-        $DB->insert_record('ltiservice_gradebookservices', (object)[
-                'gradeitemid' => $id,
-                'courseid' => $courseid,
-                'toolproxyid' => $toolproxyid,
-                'typeid' => $typeid,
-                'baseurl' => $baseurl,
-                'ltilinkid' => $ltilinkid,
-                'resourceid' => $resourceid,
-                'tag' => $tag,
+        $DB->insert_record('ltiservice_gradebookservices', (object) [
+            'gradeitemid' => $id,
+            'courseid' => $courseid,
+            'toolproxyid' => $toolproxyid,
+            'typeid' => $typeid,
+            'baseurl' => $baseurl,
+            'ltilinkid' => $ltilinkid,
+            'resourceid' => $resourceid,
+            'tag' => $tag,
         ]);
         return $id;
     }
@@ -577,13 +577,13 @@ class gradebookservices extends service_base {
             $status = grade_update($source, $gradeitem->courseid,
                 $gradeitem->itemtype, $gradeitem->itemmodule,
                 $gradeitem->iteminstance, $gradeitem->itemnumber, $grade);
-            require_once($CFG->dirroot.'/mod/assign/submission/ltisubmissions/locallib.php');
-            require_once($CFG->dirroot.'/mod/assign/locallib.php');
+            require_once($CFG->dirroot . '/mod/assign/submission/ltisubmissions/locallib.php');
+            require_once($CFG->dirroot . '/mod/assign/locallib.php');
             $cmid = $DB->get_field_sql("SELECT cm.id FROM {course_modules} cm
                 JOIN {grade_items} gi ON gi.iteminstance = cm.instance
                 JOIN {modules} m ON m.name LIKE gi.itemmodule AND gi.itemtype LIKE 'mod' AND m.id = cm.module
                 WHERE gi.id = :gradeitemid ", ['gradeitemid' => $gradeitem->id], MUST_EXIST);
-            list ($course, $cm) = get_course_and_cm_from_cmid($cmid, 'assign');
+            list($course, $cm) = get_course_and_cm_from_cmid($cmid, 'assign');
             $context = \context_module::instance($cm->id);
             $assign = new \assign($context, $cm, $course);
             $assignsubmission = new \assign_submission_ltisubmissions($assign, 'ltisubmissions');
@@ -591,7 +591,7 @@ class gradebookservices extends service_base {
             $result = ($status == GRADE_UPDATE_OK);
         }
         if (!$result) {
-            debugging("failed to save score for item ".$gradeitem->id." and user ".$grade->userid);
+            debugging("failed to save score for item " . $gradeitem->id . " and user " . $grade->userid);
             throw new \Exception(null, 500);
         }
         return $cmid;
@@ -774,7 +774,7 @@ class gradebookservices extends service_base {
      *
      */
     public static function update_coupled_gradebookservices(object $ltiinstance,
-            ?string $resourceid, ?string $tag, ?\moodle_url $subreviewurl, ?string $subreviewparams) : void {
+        ?string $resourceid, ?string $tag, ?\moodle_url $subreviewurl, ?string $subreviewparams): void {
         global $DB;
 
         if ($ltiinstance && $ltiinstance->typeid) {
@@ -792,7 +792,7 @@ class gradebookservices extends service_base {
                     $DB->update_record('ltiservice_gradebookservices', $gbs);
                 } else {
                     $baseurl = lti_get_type_type_config($ltiinstance->typeid)->lti_toolurl;
-                    $DB->insert_record('ltiservice_gradebookservices', (object)[
+                    $DB->insert_record('ltiservice_gradebookservices', (object) [
                         'gradeitemid' => $gradeitem->id,
                         'courseid' => $gradeitem->courseid,
                         'typeid' => $ltiinstance->typeid,
@@ -923,7 +923,7 @@ class gradebookservices extends service_base {
         global $DB;
         if ($lineitemid) {
             return $DB->get_record('ltiservice_gradebookservices',
-                    ['gradeitemid' => $lineitemid]);
+                ['gradeitemid' => $lineitemid]);
         }
     }
 
@@ -936,9 +936,9 @@ class gradebookservices extends service_base {
      */
     public static function validate_iso8601_date($date) {
         if (preg_match('/^([\+-]?\d{4}(?!\d{2}\b))((-?)((0[1-9]|1[0-2])' .
-                '(\3([12]\d|0[1-9]|3[01]))?|W([0-4]\d|5[0-2])(-?[1-7])?|(00[1-9]|0[1-9]\d|[12]\d{2}|3([0-5]\d|6[1-6])))' .
-                '([T\s]((([01]\d|2[0-3])((:?)[0-5]\d)?|24\:?00)([\.,]\d+(?!:))?)?(\17[0-5]\d([\.,]\d+)?)' .
-                '?([zZ]|([\+-])([01]\d|2[0-3]):?([0-5]\d)?)?)?)?$/', $date) > 0) {
+            '(\3([12]\d|0[1-9]|3[01]))?|W([0-4]\d|5[0-2])(-?[1-7])?|(00[1-9]|0[1-9]\d|[12]\d{2}|3([0-5]\d|6[1-6])))' .
+            '([T\s]((([01]\d|2[0-3])((:?)[0-5]\d)?|24\:?00)([\.,]\d+(?!:))?)?(\17[0-5]\d([\.,]\d+)?)' .
+            '?([zZ]|([\+-])([01]\d|2[0-3]):?([0-5]\d)?)?)?)?$/', $date) > 0) {
             return true;
         } else {
             return false;

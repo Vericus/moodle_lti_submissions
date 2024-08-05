@@ -16,9 +16,9 @@
 
 /**
  * Privacy class for requesting user data.
- * @package    assignsubmission_ltisubmissions
- * @copyright 2023 Moodle India {@link https://moodle.com/in/}
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     assignsubmission_ltisubmissions
+ * @copyright   2023 Moodle India {@link https://moodle.com/in/}
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace assignsubmission_ltisubmissions\privacy;
@@ -33,14 +33,14 @@ use core_privacy\local\request\contextlist;
 use mod_assign\privacy\assign_plugin_request_data;
 /**
  * Privacy class for requesting user data.
- * @package    assignsubmission_ltisubmissions
- * @copyright 2023 Moodle India {@link https://moodle.com/in/}
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     assignsubmission_ltisubmissions
+ * @copyright   2023 Moodle India {@link https://moodle.com/in/}
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class provider implements
-        \core_privacy\local\metadata\provider,
-        \mod_assign\privacy\assignsubmission_provider,
-        \mod_assign\privacy\assignsubmission_user_provider {
+    \core_privacy\local\metadata\provider,
+    \mod_assign\privacy\assignsubmission_provider,
+    \mod_assign\privacy\assignsubmission_user_provider {
 
     /**
      * Return meta data about this plugin.
@@ -48,12 +48,12 @@ class provider implements
      * @param  collection $collection A list of information to add to.
      * @return collection Return the collection after adding to it.
      */
-    public static function get_metadata(collection $collection) : collection {
+    public static function get_metadata(collection $collection): collection {
         $detail = [
-                    'itemid' => 'privacy:metadata:gradeitemid',
-                    'iteminfo' => 'privacy:metadata:textpurpose',
-                    'scoreinfo' => 'privacy:metadata:textpurpose',
-                  ];
+            'itemid' => 'privacy:metadata:gradeitemid',
+            'iteminfo' => 'privacy:metadata:textpurpose',
+            'scoreinfo' => 'privacy:metadata:textpurpose',
+        ];
         $collection->add_database_table('assignsubmission_lti_log', $detail, 'privacy:metadata:tablepurpose');
         $collection->link_subsystem('core_files', 'privacy:metadata:filepurpose');
         return $collection;
@@ -154,6 +154,7 @@ class provider implements
         list($ltiitemidsql, $ltiitemidparams) = $DB->get_in_or_equal($itemids, SQL_PARAMS_NAMED, 'ltisubid', true);
         $DB->delete_records_select('assignsubmission_lti_log', " itemid $ltiitemidsql", $ltiitemidparams);
     }
+
     /**
      * This is covered by mod_assign provider and the query on assign_submissions.
      *
@@ -182,6 +183,7 @@ class provider implements
     public static function get_userids_from_context(\core_privacy\local\request\userlist $userlist) {
         // Not required.
     }
+
     /**
      * Deletes all submissions for the submission ids / userids provided in a context.
      * assign_plugin_request_data contains:
@@ -216,7 +218,7 @@ class provider implements
 
         $params['assignid'] = $deletedata->get_assignid();
         list($ltisubmissionsql, $ltisubmissionparams) =
-        $DB->get_in_or_equal($deletedata->get_submissionids(), SQL_PARAMS_NAMED, 'ltisubid', true);
+            $DB->get_in_or_equal($deletedata->get_submissionids(), SQL_PARAMS_NAMED, 'ltisubid', true);
         $DB->delete_records_select('assignsubmission_ltisub', " submission $ltisubmissionsql", $ltisubmissionparams);
         $itemids = $DB->get_fieldset_sql("SELECT gi.id FROM {grade_items} gi
             WHERE gi.iteminstance = :assignid AND gi.itemmodule like 'assign' ", $params);

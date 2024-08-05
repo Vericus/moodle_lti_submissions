@@ -17,10 +17,11 @@
 /**
  * This file contains the class for backup of this submission plugin
  *
- * @package assignsubmission_ltisubmissions
- * @copyright 2023 Moodle India {@link https://moodle.com/in/}
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     assignsubmission_ltisubmissions
+ * @copyright   2023 Moodle India {@link https://moodle.com/in/}
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 /**
  * Provides the information to backup lti submissions
  *
@@ -31,19 +32,17 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class backup_assignsubmission_ltisubmissions_subplugin extends backup_subplugin {
-
     /**
      * Returns the subplugin information to attach to submission element
      * @return backup_subplugin_element
      */
     protected function define_submission_subplugin_structure() {
-
         // Create XML elements.
         $subplugin = $this->get_subplugin_element();
         $subpluginwrapper = new backup_nested_element($this->get_recommended_name());
         $subpluginelement = new backup_nested_element('submission_ltisubmissions',
-                                                      null,
-                                                      ['gradepercent', 'originalgrade', 'launchid', 'state', 'submission']);
+            null,
+            ['gradepercent', 'originalgrade', 'launchid', 'state', 'submission']);
 
         // Connect XML elements into the tree.
         $subplugin->add_child($subpluginwrapper);
@@ -51,17 +50,16 @@ class backup_assignsubmission_ltisubmissions_subplugin extends backup_subplugin 
 
         // Set source to populate the data.
         $subpluginelement->set_source_table('assignsubmission_ltisub',
-                                            ['submission' => backup::VAR_PARENTID]);
+            ['submission' => backup::VAR_PARENTID]);
 
         // The parent is the submission.
         $subpluginelement->annotate_files('assignsubmission_ltisubmissions',
-                                          'ltisubmission_draft_files',
-                                          'submission');
+            'ltisubmission_draft_files',
+            'submission');
         // The parent is the submission.
         $subpluginelement->annotate_files('assignsubmission_ltisubmissions',
-                                          'ltisubmission_final_files',
-                                          'submission');
+            'ltisubmission_final_files',
+            'submission');
         return $subplugin;
     }
-
 }

@@ -17,9 +17,9 @@
 /**
  * This file contains a controller for receiving LTI service requests
  *
- * @package    assignsubmission_ltisubmissions
- * @copyright 2023 Moodle India {@link https://moodle.com/in/}
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     assignsubmission_ltisubmissions
+ * @copyright   2023 Moodle India {@link https://moodle.com/in/}
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 define('NO_DEBUG_DISPLAY', true);
@@ -52,7 +52,7 @@ foreach ($services as $service) {
     $resources = $service->get_resources();
     foreach ($resources as $resource) {
         if (($isget && !empty($accept) && (strpos($accept, '*/*') === false) &&
-             !in_array($accept, $resource->get_formats())) ||
+            !in_array($accept, $resource->get_formats())) ||
             ((!$isget && !$isdelete) && !in_array($contenttype, $resource->get_formats()))) {
             continue;
         }

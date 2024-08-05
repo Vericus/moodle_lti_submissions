@@ -17,9 +17,9 @@
 /**
  * This file contains a class definition for the Context Settings resource
  *
- * @package    assignsubmission_ltisubmissions
- * @copyright 2023 Moodle India {@link https://moodle.com/in/}
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     assignsubmission_ltisubmissions
+ * @copyright   2023 Moodle India {@link https://moodle.com/in/}
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace assignsubmission_ltisubmissions\service\toolsettings\local\resources;
@@ -29,9 +29,9 @@ use assignsubmission_ltisubmissions\service\toolsettings\local\service\toolsetti
 /**
  * A resource extending the Context-level (ToolProxyBinding) Settings.
  *
- * @package    assignsubmission_ltisubmissions
- * @copyright 2023 Moodle India {@link https://moodle.com/in/}
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     assignsubmission_ltisubmissions
+ * @copyright   2023 Moodle India {@link https://moodle.com/in/}
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class linksettings extends \ltiservice_toolsettings\local\resources\linksettings {
     /**
@@ -48,8 +48,8 @@ class linksettings extends \ltiservice_toolsettings\local\resources\linksettings
         $contenttype = $response->get_accept();
         $simpleformat = !empty($contenttype) && ($contenttype == $this->formats[1]);
         $ok = (empty($bubble) || ((($bubble == 'distinct') || ($bubble == 'all')))) &&
-             (!$simpleformat || empty($bubble) || ($bubble != 'all')) &&
-             (empty($bubble) || ($response->get_request_method() == self::HTTP_GET));
+            (!$simpleformat || empty($bubble) || ($bubble != 'all')) &&
+            (empty($bubble) || ($response->get_request_method() == self::HTTP_GET));
         if (!$ok) {
             $response->set_code(406);
         }
@@ -66,7 +66,7 @@ class linksettings extends \ltiservice_toolsettings\local\resources\linksettings
                     WHERE apc.plugin like :plugin AND apc.name LIKE :name AND apc.subtype LIKE :subtype
                     AND apc.name LIKE :subtype AND ma.id = :assignment ',
                     ['plugin' => 'ltisubmissions', 'name' => 'typeid',
-                    'subtype' => 'assignsubmission', 'assignment' => $linkid,
+                        'subtype' => 'assignsubmission', 'assignment' => $linkid,
                     ], MUST_EXIST);
                 $ok = $this->check_tool($lti->typeid, $response->get_request_data(),
                     [toolsettings::SCOPE_TOOL_SETTINGS]);
@@ -156,7 +156,7 @@ class linksettings extends \ltiservice_toolsettings\local\resources\linksettings
                     $ok = !empty($json);
                     if ($ok) {
                         $ok = isset($json->{"@graph"}) && is_array($json->{"@graph"}) && (count($json->{"@graph"}) == 1) &&
-                              ($json->{"@graph"}[0]->{"@type"} == 'LtiLink');
+                            ($json->{"@graph"}[0]->{"@type"} == 'LtiLink');
                     }
                     if ($ok) {
                         $settings = $json->{"@graph"}[0]->custom;

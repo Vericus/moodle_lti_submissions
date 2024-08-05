@@ -17,9 +17,9 @@
 /**
  * This file contains the class for restore of this submission plugin
  *
- * @package assignsubmission_ltisubmissions
- * @copyright 2023 Moodle India {@link https://moodle.com/in/}
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     assignsubmission_ltisubmissions
+ * @copyright   2023 Moodle India {@link https://moodle.com/in/}
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 /**
@@ -33,7 +33,6 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class restore_assignsubmission_ltisubmissions_subplugin extends restore_subplugin {
-
     /**
      * Returns array the paths to be handled by the subplugin at assignment level
      * @return array
@@ -59,7 +58,7 @@ class restore_assignsubmission_ltisubmissions_subplugin extends restore_subplugi
     public function process_assignsubmission_ltisubmissions_submission($data) {
         global $DB;
 
-        $data = (object)$data;
+        $data = (object) $data;
         $data->assignment = $this->get_new_parentid('assign');
         $oldsubmissionid = $data->submission;
         // The mapping is set in the restore for the core assign activity.
@@ -68,15 +67,14 @@ class restore_assignsubmission_ltisubmissions_subplugin extends restore_subplugi
         $DB->insert_record('assignsubmission_ltisub', $data);
 
         $this->add_related_files('assignsubmission_ltisubmissions',
-                                 'ltisubmission_draft_files',
-                                 'submission',
-                                 null,
-                                 $oldsubmissionid);
+            'ltisubmission_draft_files',
+            'submission',
+            null,
+            $oldsubmissionid);
         $this->add_related_files('assignsubmission_ltisubmissions',
-                                 'ltisubmission_final_files',
-                                 'submission',
-                                 null,
-                                 $oldsubmissionid);
+            'ltisubmission_final_files',
+            'submission',
+            null,
+            $oldsubmissionid);
     }
-
 }

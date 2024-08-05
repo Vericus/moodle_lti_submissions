@@ -17,9 +17,9 @@
 /**
  * Tests for mod/assign/submission/ltisubmissions/locallib.php
  *
- * @copyright 2023 Moodle India {@link https://moodle.com/in/}
- * @package    assignsubmission_ltisubmissions
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     assignsubmission_ltisubmissions
+ * @copyright   2023 Moodle India {@link https://moodle.com/in/}
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 namespace assignsubmission_ltisubmissions;
 
@@ -54,8 +54,8 @@ class locallib_test extends \advanced_testcase {
         $course = $this->getDataGenerator()->create_course();
         $student = $this->getDataGenerator()->create_and_enrol($course, 'student');
         $assign = $this->create_instance($course, [
-                'assignsubmission_ltisubmission_enabled' => 1,
-            ]);
+            'assignsubmission_ltisubmission_enabled' => 1,
+        ]);
 
         $this->setUser($student->id);
 
@@ -75,11 +75,10 @@ class locallib_test extends \advanced_testcase {
         return [
             'With allowed draft file' => [
                 (object) [
-                    'https://api.cadmus.io/lti/submission' =>
-                    (object) ['submission_type' => 'draft',
+                    'https://api.cadmus.io/lti/submission' => (object) ['submission_type' => 'draft',
                         'content_items' => [
-                            (object) ['url' =>
-                                $CFG->dirroot.'/mod/assign/submission/ltisubmissions/tests/fixtures/submission.pdf',
+                            (object) [
+                                'url' => $CFG->dirroot . '/mod/assign/submission/ltisubmissions/tests/fixtures/submission.pdf',
                                 'title' => 'submission.pdf',
                             ],
                         ],
@@ -89,11 +88,10 @@ class locallib_test extends \advanced_testcase {
             ],
             'With non allowed draft file' => [
                 (object) [
-                    'https://api.cadmus.io/lti/submission' =>
-                    (object) ['submission_type' => 'draft',
+                    'https://api.cadmus.io/lti/submission' => (object) ['submission_type' => 'draft',
                         'content_items' => [
-                         (object) ['url' =>
-                            $CFG->dirroot.'/mod/assign/submission/ltisubmissions/tests/fixtures/nosubmission.pdf',
+                            (object) [
+                                'url' => $CFG->dirroot . '/mod/assign/submission/ltisubmissions/tests/fixtures/nosubmission.pdf',
                                 'title' => 'submission.pdf',
                             ],
                         ],
@@ -103,11 +101,10 @@ class locallib_test extends \advanced_testcase {
             ],
             'With allowed final file' => [
                 (object) [
-                    'https://api.cadmus.io/lti/submission' =>
-                    (object) ['submission_type' => 'final',
-                        'content_items' =>
-                            [ (object) ['url' =>
-                                $CFG->dirroot.'/mod/assign/submission/ltisubmissions/tests/fixtures/submission.pdf',
+                    'https://api.cadmus.io/lti/submission' => (object) ['submission_type' => 'final',
+                        'content_items' => [
+                            (object) [
+                                'url' => $CFG->dirroot . '/mod/assign/submission/ltisubmissions/tests/fixtures/submission.pdf',
                                 'title' => 'submission.pdf',
                             ],
                         ],
@@ -117,11 +114,10 @@ class locallib_test extends \advanced_testcase {
             ],
             'With non allowed final file' => [
                 (object) [
-                    'https://api.cadmus.io/lti/submission' =>
-                    (object) ['submission_type' => 'final',
-                        'content_items' =>
-                            [ (object) ['url' =>
-                                $CFG->dirroot.'/mod/assign/submission/ltisubmissions/tests/fixtures/nosubmission.pdf',
+                    'https://api.cadmus.io/lti/submission' => (object) ['submission_type' => 'final',
+                        'content_items' => [
+                            (object) [
+                                'url' => $CFG->dirroot . '/mod/assign/submission/ltisubmissions/tests/fixtures/nosubmission.pdf',
                                 'title' => 'submission.pdf',
                             ],
                         ],
