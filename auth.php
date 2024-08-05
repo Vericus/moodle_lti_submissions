@@ -37,7 +37,6 @@ if (!isloggedin() && empty($_POST['repost'])) {
     echo $output->render($page);
     echo $output->footer();
     return;
-    throw new Exception("Not Logged In", 1);
 }
 
 $scope = optional_param('scope', '', PARAM_TEXT);
