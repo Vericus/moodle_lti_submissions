@@ -101,7 +101,7 @@ switch ($messagetype) {
         lti_verify_sourcedid($ltiinstance, $parsed);
         lti_set_session_user($parsed->userid);
 
-        $gradestatus = assignlti_update_grade($ltiinstance, $parsed->userid, $parsed->gradeval);
+        $gradestatus = assignsubmission_ltisubmissions_update_grade($ltiinstance, $parsed->userid, $parsed->gradeval);
 
         if (!$gradestatus) {
             throw new Exception('Grade replace response');
@@ -133,7 +133,7 @@ switch ($messagetype) {
 
         lti_verify_sourcedid($ltiinstance, $parsed);
 
-        $grade = assignlti_read_grade($ltiinstance, $parsed->userid);
+        $grade = assignsubmission_ltisubmissions_read_grade($ltiinstance, $parsed->userid);
 
         $responsexml = lti_get_response_xml(
                 'success',  // Empty grade is also 'success'.
@@ -155,7 +155,7 @@ switch ($messagetype) {
         $parsed = lti_parse_grade_delete_message($xml);
 
         $psuedoltiinstance = $DB->get_record('assign', ['id' => $parsed->instanceid]);
-        $ltiinstance->typeid = assignsubmission_get_psuedoltitypeid($psuedoltiinstance);
+        $ltiinstance->typeid = assignsubmission_ltisubmissions_get_psuedoltitypeid($psuedoltiinstance);
         if (!lti_accepts_grades($psuedoltiinstance)) {
             throw new Exception('Tool does not accept grades');
         }

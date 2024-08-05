@@ -13,22 +13,32 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
  * library file for the lti submissions
  *
- * @package assignsubmission_ltisubmissions
- * @copyright 2023 Moodle India {@link https://moodle.com/in/}
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     assignsubmission_ltisubmissions
+ * @copyright   2009 Marc Alier <marc.alier@upc.edu>, Jordi Piguillem, Nikolas Galanis
+ * @copyright   2009 Universitat Politecnica de Catalunya http://www.upc.edu
+ * @author      Marc Alier
+ * @author      Jordi Piguillem
+ * @author      Nikolas Galanis
+ * @author      Chris Scribner
+ * @copyright   2015 Vital Source Technologies http://vitalsource.com
+ * @author      Stephen Vickers
+ * @copyright   2023 Moodle India {@link https://moodle.com/in/}
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
-require_once($CFG->dirroot.'/mod/lti/locallib.php');
+require_once($CFG->dirroot . '/mod/lti/locallib.php');
+
 /**
  * Updates the urls to the existing variable.
+ *
  * @param reference $urls
- * @return void
  */
-function assignsubmission_ltisubmission_urls(&$urls) {
+function assignsubmission_ltisubmissions_urls(&$urls) {
     $url = new moodle_url('/mod/lti/certs.php');
     $urls['assignpublickeyset'] = $url->out();
     $url = new moodle_url('/mod/lti/token.php');
@@ -36,6 +46,7 @@ function assignsubmission_ltisubmission_urls(&$urls) {
     $url = new moodle_url('/mod/assign/submission/ltisubmissions/auth.php');
     $urls['assignauthrequest'] = $url->out();
 }
+
 /**
  * Generate the form for initiating a login request for an LTI 1.3 message
  *
@@ -47,12 +58,13 @@ function assignsubmission_ltisubmission_urls(&$urls) {
  * @param string         $title     Title of content item
  * @param string         $text      Description of content item
  * @param int            $foruserid Id of the user targeted by the launch
+ *
  * @return string
  */
-function assignlti_initiate_login($courseid, $cmid, $instance, $config, $messagetype = 'basic-lti-launch-request',
-        $title = '', $text = '', $foruserid = 0) {
+function assignsubmission_ltisubmissions_initiate_login($courseid, $cmid, $instance, $config, $messagetype = 'basic-lti-launch-request',
+    $title = '', $text = '', $foruserid = 0) {
 
-    $params = assignlti_build_login_request($courseid, $cmid, $instance, $config, $messagetype, $foruserid, $title, $text);
+    $params = assignsubmission_ltisubmissions_build_login_request($courseid, $cmid, $instance, $config, $messagetype, $foruserid, $title, $text);
     $r = "<form action=\"" . $config->lti_initiatelogin .
         "\" name=\"ltiInitiateLoginForm\" id=\"ltiInitiateLoginForm\" method=\"post\" " .
         "encType=\"application/x-www-form-urlencoded\">\n";
@@ -72,6 +84,7 @@ function assignlti_initiate_login($courseid, $cmid, $instance, $config, $message
 
     return $r;
 }
+
 /**
  * Prepares an LTI 1.3 login request
  *
@@ -83,14 +96,15 @@ function assignlti_initiate_login($courseid, $cmid, $instance, $config, $message
  * @param int            $foruserid Id of the user targeted by the launch
  * @param string         $title     Title of content item
  * @param string         $text      Description of content item
+ *
  * @return array Login request parameters
  */
-function assignlti_build_login_request($courseid, $cmid, $instance, $config, $messagetype, $foruserid=0, $title = '', $text = '') {
+function assignsubmission_ltisubmissions_build_login_request($courseid, $cmid, $instance, $config, $messagetype, $foruserid = 0, $title = '', $text = '') {
     global $CFG, $SESSION;
     $ltihint = [];
     if (!empty($instance)) {
         $endpoint = !empty($instance->toolurl) ? $instance->toolurl : $config->lti_toolurl;
-        $launchid = 'ltilaunch'.$instance->id.'_'.rand();
+        $launchid = 'ltilaunch' . $instance->id . '_' . rand();
         $ltihint['cmid'] = $cmid;
         $SESSION->$launchid = "{$courseid},{$config->typeid},{$cmid},{$messagetype},{$foruserid},,";
     } else {
@@ -98,13 +112,13 @@ function assignlti_build_login_request($courseid, $cmid, $instance, $config, $me
         if (($messagetype === 'ContentItemSelectionRequest') && !empty($config->lti_toolurl_ContentItemSelectionRequest)) {
             $endpoint = $config->lti_toolurl_ContentItemSelectionRequest;
         }
-        $launchid = "ltilaunch_$messagetype".rand();
+        $launchid = "ltilaunch_$messagetype" . rand();
         $SESSION->$launchid =
             "{$courseid},{$config->typeid},{$cmid},{$messagetype},{$foruserid},"
             . base64_encode($title) . ',' . base64_encode($text);
     }
     $endpoint = trim($endpoint);
-    $services = assignlti_get_services();
+    $services = assignsubmission_ltisubmissions_get_services();
     foreach ($services as $service) {
         [$endpoint] = $service->override_endpoint($messagetype ?? 'basic-lti-launch-request', $endpoint, '', $courseid, $instance);
     }
@@ -128,21 +142,20 @@ function assignlti_build_login_request($courseid, $cmid, $instance, $config, $me
 }
 
 /**
- * Returns the launch tool info for the assignment submission.
+ * Echoes the launch tool info for the assignment submission.
  * @param stdClass     $psuedolti      Assignment object
  * @param int          $foruserid      User id for whom the launch is made.
- *
- * @return The content to launch the lti.
  */
-function assignsubmission_lti_launch_tool($psuedolti, $foruserid) {
-    list($endpoint, $parms) = assignsubmission_lti_get_launch_data($psuedolti, '', '', $foruserid);
+function assignsubmission_ltisubmissions_launch_tool($psuedolti, $foruserid) {
+    [$endpoint, $parms] = assignsubmission_ltisubmissions_get_launch_data($psuedolti, '', '', $foruserid);
 
-    $debuglaunch = ( $psuedolti->debuglaunch == 1 );
+    $debuglaunch = ($psuedolti->debuglaunch == 1);
 
     $content = lti_post_launch_html($parms, $endpoint, $debuglaunch);
 
     echo $content;
 }
+
 /**
  * Return the launch data required for opening the external tool.
  *
@@ -150,10 +163,11 @@ function assignsubmission_lti_launch_tool($psuedolti, $foruserid) {
  * @param  string $nonce  the nonce value to use (applies to LTI 1.3 only)
  * @param  string $messagetype  the messagetype for launch
  * @param  integer $foruserid  the userid for launch
+ *
  * @return array the endpoint URL and parameters (including the signature)
  * @since  Moodle 3.0
  */
-function assignsubmission_lti_get_launch_data($instance, $nonce = '', $messagetype = 'basic-lti-launch-request', $foruserid = 0) {
+function assignsubmission_ltisubmissions_get_launch_data($instance, $nonce = '', $messagetype = 'basic-lti-launch-request', $foruserid = 0) {
     global $PAGE, $USER;
     $messagetype = $messagetype ? $messagetype : 'basic-lti-launch-request';
     $tool = lti_get_instance_type($instance);
@@ -213,7 +227,7 @@ function assignsubmission_lti_get_launch_data($instance, $nonce = '', $messagety
 
     $course = $PAGE->course;
     $islti2 = isset($tool->toolproxyid);
-    $allparams = assignsubmission_lti_build_request($instance, $typeconfig, $course, $typeid, $islti2, $messagetype, $foruserid);
+    $allparams = assignsubmission_ltisubmissions_build_request($instance, $typeconfig, $course, $typeid, $islti2, $messagetype, $foruserid);
     if ($islti2) {
         $requestparams = lti_build_request_lti2($tool, $allparams);
     } else {
@@ -224,7 +238,7 @@ function assignsubmission_lti_get_launch_data($instance, $nonce = '', $messagety
     if (isset($typeconfig['customparameters'])) {
         $customstr = $typeconfig['customparameters'];
     }
-    $services = assignlti_get_services();
+    $services = assignsubmission_ltisubmissions_get_services();
     foreach ($services as $service) {
         [$endpoint, $customstr] = $service->override_endpoint($messagetype,
             $endpoint, $customstr, $instance->course, $instance);
@@ -258,12 +272,12 @@ function assignsubmission_lti_get_launch_data($instance, $nonce = '', $messagety
 
     // Add the parameters configured by the LTI services.
     if ($typeid && !$islti2) {
-        $services = assignlti_get_services();
+        $services = assignsubmission_ltisubmissions_get_services();
         foreach ($services as $service) {
             $serviceparameters = $service->get_launch_parameters('basic-lti-launch-request',
-                    $course->id, $USER->id , $typeid, $instance->id);
+                $course->id, $USER->id, $typeid, $instance->id);
             foreach ($serviceparameters as $paramkey => $paramvalue) {
-                $requestparams['custom_' . $paramkey] = assignlti_parse_custom_parameter($toolproxy, $tool, $requestparams,
+                $requestparams['custom_' . $paramkey] = assignsubmission_ltisubmissions_parse_custom_parameter($toolproxy, $tool, $requestparams,
                     $paramvalue, $islti2);
             }
         }
@@ -296,6 +310,7 @@ function assignsubmission_lti_get_launch_data($instance, $nonce = '', $messagety
 
     return [$endpoint, $parms];
 }
+
 /**
  * Parse a custom parameter to replace any substitution variables
  *
@@ -307,7 +322,7 @@ function assignsubmission_lti_get_launch_data($instance, $nonce = '', $messagety
  *
  * @return string Parsed value of custom parameter
  */
-function assignlti_parse_custom_parameter($toolproxy, $tool, $params, $value, $islti2) {
+function assignsubmission_ltisubmissions_parse_custom_parameter($toolproxy, $tool, $params, $value, $islti2) {
     // This is required as {${$valarr[0]}->{$valarr[1]}}" may be using the USER or COURSE var.
     if ($value) {
         if (substr($value, 0, 1) == '\\') {
@@ -324,9 +339,9 @@ function assignlti_parse_custom_parameter($toolproxy, $tool, $params, $value, $i
                             $value = $params[$val];
                         } else {
                             $valarr = explode('->', substr($val, 1), 2);
-                            $value = "{${$valarr[0]}->{$valarr[1]}}";
-                            $value = str_replace('<br />' , ' ', $value);
-                            $value = str_replace('<br>' , ' ', $value);
+                            $value = "{${$valarr[0]}->{$valarr[1]} }";
+                            $value = str_replace('<br />', ' ', $value);
+                            $value = str_replace('<br>', ' ', $value);
                             $value = format_string($value);
                         }
                     } else {
@@ -334,7 +349,7 @@ function assignlti_parse_custom_parameter($toolproxy, $tool, $params, $value, $i
                     }
                 } else {
                     $val = $value;
-                    $services = assignlti_get_services();
+                    $services = assignsubmission_ltisubmissions_get_services();
                     foreach ($services as $service) {
                         $service->set_tool_proxy($toolproxy);
                         $service->set_type($tool);
@@ -349,16 +364,17 @@ function assignlti_parse_custom_parameter($toolproxy, $tool, $params, $value, $i
     }
     return $value;
 }
+
 /**
  * Initializes an array with the services supported by the LTI module
  *
  * @return array List of services
  */
-function assignlti_get_services() {
+function assignsubmission_ltisubmissions_get_services() {
 
     global $CFG;
     $services = [];
-    $serviceclasses = scandir($CFG->dirroot.'/mod/assign/submission/ltisubmissions/classes/service');
+    $serviceclasses = scandir($CFG->dirroot . '/mod/assign/submission/ltisubmissions/classes/service');
     foreach ($serviceclasses as $serviceclass) {
         if (!in_array($serviceclass, ['.', '..'])) {
             $classname = "\\assignsubmission_ltisubmissions\\service\\{$serviceclass}\\local\\service\\{$serviceclass}";
@@ -369,6 +385,7 @@ function assignlti_get_services() {
     }
     return $services;
 }
+
 /**
  * This function builds the request that must be sent to the tool producer
  *
@@ -382,7 +399,7 @@ function assignlti_get_services() {
  *
  * @return array                    Request details
  */
-function assignsubmission_lti_build_request($instance, $typeconfig, $course, $typeid = null, $islti2 = false,
+function assignsubmission_ltisubmissions_build_request($instance, $typeconfig, $course, $typeid = null, $islti2 = false,
     $messagetype = 'basic-lti-launch-request', $foruserid = 0) {
     global $USER, $CFG;
 
@@ -394,7 +411,7 @@ function assignsubmission_lti_build_request($instance, $typeconfig, $course, $ty
     } else {
         $userinfo = $USER;
     }
-    $role = assignlti_get_ims_role($userinfo, $instance->cmid, $instance->course, $islti2);
+    $role = assignsubmission_ltisubmissions_get_ims_role($userinfo, $instance->cmid, $instance->course, $islti2);
     $requestparams = [
         'user_id' => $userinfo->id,
         'lis_person_sourcedid' => $userinfo->idnumber,
@@ -435,8 +452,8 @@ function assignsubmission_lti_build_request($instance, $typeconfig, $course, $ty
     }
 
     if (!empty($instance->id) && !empty($instance->servicesalt) && ($islti2 ||
-            $typeconfig['acceptgrades'] == LTI_SETTING_ALWAYS ||
-            ($typeconfig['acceptgrades'] == LTI_SETTING_DELEGATE && $instance->instructorchoiceacceptgrades == LTI_SETTING_ALWAYS))
+        $typeconfig['acceptgrades'] == LTI_SETTING_ALWAYS ||
+        ($typeconfig['acceptgrades'] == LTI_SETTING_DELEGATE && $instance->instructorchoiceacceptgrades == LTI_SETTING_ALWAYS))
     ) {
         $placementsecret = $instance->servicesalt;
         $sourcedid = json_encode(lti_build_sourcedid($instance->id, $userinfo->id, $placementsecret, $typeid));
@@ -478,6 +495,7 @@ function assignsubmission_lti_build_request($instance, $typeconfig, $course, $ty
 
     return $requestparams;
 }
+
 /**
  * Gets the IMS role string for the specified user and LTI course module.
  *
@@ -488,7 +506,7 @@ function assignsubmission_lti_build_request($instance, $typeconfig, $course, $ty
  *
  * @return string A role string suitable for passing with an LTI launch
  */
-function assignlti_get_ims_role($user, $cmid, $courseid, $islti2) {
+function assignsubmission_ltisubmissions_get_ims_role($user, $cmid, $courseid, $islti2) {
     $roles = [];
 
     if (empty($cmid)) {
@@ -523,6 +541,7 @@ function assignlti_get_ims_role($user, $cmid, $courseid, $islti2) {
 
     return join(',', $roles);
 }
+
 /**
  * Serves assignment submissions and other files.
  *
@@ -533,15 +552,16 @@ function assignlti_get_ims_role($user, $cmid, $courseid, $islti2) {
  * @param array $args
  * @param bool $forcedownload
  * @param array $options - List of options affecting file serving.
+ *
  * @return bool false if file not found, does not return if found - just send the file
  */
 function assignsubmission_ltisubmissions_pluginfile($course,
-                                          $cm,
-                                          context $context,
-                                          $filearea,
-                                          $args,
-                                          $forcedownload,
-                                          array $options=[]) {
+    $cm,
+    context $context,
+    $filearea,
+    $args,
+    $forcedownload,
+    array $options = []) {
     global $DB, $CFG;
 
     if ($context->contextlevel != CONTEXT_MODULE) {
@@ -549,11 +569,11 @@ function assignsubmission_ltisubmissions_pluginfile($course,
     }
 
     require_login($course, false, $cm);
-    $itemid = (int)array_shift($args);
+    $itemid = (int) array_shift($args);
     $record = $DB->get_record('assign_submission',
-                              ['id' => $itemid],
-                              'userid, assignment, groupid',
-                              MUST_EXIST);
+        ['id' => $itemid],
+        'userid, assignment, groupid',
+        MUST_EXIST);
     $userid = $record->userid;
     $groupid = $record->groupid;
 
@@ -585,29 +605,32 @@ function assignsubmission_ltisubmissions_pluginfile($course,
     }
     send_file($file, $file->get_filename(), null, 0, false, $forcedownload, $options = []);
 }
+
 /**
  * Function to get the LTI type id for the assignment.
  * @param StdClass      $psuedoltiinstance  Assignment instance considering as LTI
  *
  * @return int The type id value associated to the activity
  */
-function assignsubmission_get_psuedoltitypeid($psuedoltiinstance) {
+function assignsubmission_ltisubmissions_get_psuedoltitypeid($psuedoltiinstance) {
     global $DB;
     return $DB->get_field('assign_plugin_config', 'value',
-            ['plugin' => 'ltisubmissions', 'name' => 'typeid',
+        ['plugin' => 'ltisubmissions', 'name' => 'typeid',
             'subtype' => 'assignsubmission',
             'assignment' => $psuedoltiinstance->id,
         ]);
 }
+
 /**
  * Function to update the grade values.
+ *
  * @param StdClass       $ltiinstance    Assignment object
  * @param integer        $userid         Associated Userid
  * @param float          $gradeval       Awarded Grades
  *
  * @return boolean status of grade update.
  */
-function assignlti_update_grade($ltiinstance, $userid, $gradeval) {
+function assignsubmission_ltisubmissions_update_grade($ltiinstance, $userid, $gradeval) {
     global $CFG;
     require_once($CFG->libdir . '/gradelib.php');
 
@@ -617,19 +640,22 @@ function assignlti_update_grade($ltiinstance, $userid, $gradeval) {
     $gradeval = $gradeval * floatval($ltiinstance->grade);
 
     $grade = new stdClass();
-    $grade->userid   = $userid;
+    $grade->userid = $userid;
     $grade->rawgrade = $gradeval;
 
     $status = grade_update('mod/assign', $ltiinstance->course, LTI_ITEM_TYPE, 'assign', $ltiinstance->id, 0, $grade, $params);
     return $status == GRADE_UPDATE_OK;
 }
+
 /**
  * Function to read grade values.
+ *
  * @param stdClass     $ltiinstance
  * @param integer      $userid
- * @return floal|void  grade value if available.
+ *
+ * @return float|null  grade value if available.
  */
-function assignlti_read_grade($ltiinstance, $userid) {
+function assignsubmission_ltisubmissions_read_grade($ltiinstance, $userid) {
     global $CFG;
     require_once($CFG->libdir . '/gradelib.php');
 

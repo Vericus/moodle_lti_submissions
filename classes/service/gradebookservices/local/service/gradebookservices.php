@@ -375,7 +375,7 @@ class gradebookservices extends service_base {
                         && $lineitem->iteminstance == $ltilinkid)))) {
                     // We will need to check if the activity related belongs to our tool proxy.
                     $ltiactivity = $DB->get_record('assign', ['id' => $lineitem->iteminstance]);
-                    $ltiactivity->typeid = assignsubmission_get_psuedoltitypeid($ltiactivity);
+                    $ltiactivity->typeid = assignsubmission_ltisubmissions_get_psuedoltitypeid($ltiactivity);
                     if (($ltiactivity) && (isset($ltiactivity->typeid))) {
                         if ($ltiactivity->typeid != 0) {
                             $tool = $DB->get_record('lti_types', ['id' => $ltiactivity->typeid]);
@@ -429,7 +429,7 @@ class gradebookservices extends service_base {
             if (!$gbs) {
                 // We will need to check if the activity related belongs to our tool proxy.
                 $ltiactivity = $DB->get_record('assign', ['id' => $lineitem->iteminstance]);
-                $ltiactivity->typeid = assignsubmission_get_psuedoltitypeid($ltiactivity);
+                $ltiactivity->typeid = assignsubmission_ltisubmissions_get_psuedoltitypeid($ltiactivity);
                 if (($ltiactivity) && (isset($ltiactivity->typeid))) {
                     if ($ltiactivity->typeid != 0) {
                         $tool = $DB->get_record('lti_types', ['id' => $ltiactivity->typeid]);
@@ -736,7 +736,7 @@ class gradebookservices extends service_base {
         $sqlparams1['linkid'] = $linkid;
         $sqlparams1['course'] = $course;
         $ltiactivity = $DB->get_record('assign', ['id' => $linkid, 'course' => $course]);
-        $ltiactivity->typeid = assignsubmission_get_psuedoltitypeid($ltiactivity);
+        $ltiactivity->typeid = assignsubmission_ltisubmissions_get_psuedoltitypeid($ltiactivity);
         if ($ltiactivity) {
             if ($ltiactivity->typeid == 0) {
                 $tool = lti_get_tool_by_url_match($ltiactivity->toolurl, $course);

@@ -127,8 +127,8 @@ if ($ok && $id) {
     require_capability('mod/assign:view', $context);
     $psuedolti = $DB->get_record('assign', ['id' => $cm->instance], '*', MUST_EXIST);
     $psuedolti->cmid = $cm->id;
-    $psuedolti->typeid = assignsubmission_get_psuedoltitypeid($psuedolti);
-    list($endpoint, $params) = assignsubmission_lti_get_launch_data($psuedolti, $nonce, $messagetype, $foruserid);
+    $psuedolti->typeid = assignsubmission_ltisubmissions_get_psuedoltitypeid($psuedolti);
+    list($endpoint, $params) = assignsubmission_ltisubmissions_get_launch_data($psuedolti, $nonce, $messagetype, $foruserid);
 } else {
     $params['error'] = $error;
     if (!empty($desc)) {

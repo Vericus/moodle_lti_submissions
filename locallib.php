@@ -146,7 +146,7 @@ class assign_submission_ltisubmissions extends \assign_submission_plugin {
                 $this->set_config($field, $data->{$field});
             }
         }
-        $services = assignlti_get_services();
+        $services = assignsubmission_ltisubmissions_get_services();
         $assignmentinstance = $this->assignment->get_instance();
         $assignmentinstance->typeid = $data->typeid;
         foreach ($services as $service) {
@@ -178,7 +178,7 @@ class assign_submission_ltisubmissions extends \assign_submission_plugin {
         if ($config->lti_ltiversion === LTI_VERSION_1P3) {
             if (!isset($SESSION->lti_initiatelogin_status)) {
                 $msgtype = 'basic-lti-launch-request';
-                echo assignlti_initiate_login($cm->course, $cm->id, $psuedolti, $config, $msgtype, '', '', $data->userid);
+                echo assignsubmission_ltisubmissions_initiate_login($cm->course, $cm->id, $psuedolti, $config, $msgtype, '', '', $data->userid);
                 die();
             } else {
                 unset($SESSION->lti_initiatelogin_status);
