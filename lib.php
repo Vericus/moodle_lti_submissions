@@ -553,7 +553,7 @@ function assignsubmission_ltisubmissions_get_ims_role($user, $cmid, $courseid, $
  * @param bool $forcedownload
  * @param array $options - List of options affecting file serving.
  *
- * @return bool false if file not found, does not return if found - just send the file
+ * @return bool|null false if file not found, does not return if found - just send the file
  */
 function assignsubmission_ltisubmissions_pluginfile($course,
     $cm,
@@ -603,7 +603,7 @@ function assignsubmission_ltisubmissions_pluginfile($course,
     if (!($file = $fs->get_file_by_hash(sha1($fullpath))) || $file->is_directory()) {
         return false;
     }
-    send_file($file, $file->get_filename(), null, 0, false, $forcedownload, $options = []);
+    send_file($file, $file->get_filename(), null, 0, false, $forcedownload, '', false, $options);
 }
 
 /**
