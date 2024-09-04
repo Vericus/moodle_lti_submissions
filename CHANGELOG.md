@@ -1,5 +1,9 @@
 # LTI Submissions Plugin
 
+## 2024-09-04
+
+Updated with upstream changes contributed by [Catalyst](https://www.catalyst-au.net/solutions/moodle) following a code review.
+
 ## 2024-05-17
 
 - Fix `LIMIT 1` not used when querying and expecting a single course module
