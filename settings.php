@@ -23,24 +23,33 @@
  */
 defined('MOODLE_INTERNAL') || die();
 global $DB;
+
+$settings = new admin_settingpage('assignsubmission_ltisubmissions', new lang_string('pluginname', 'assignsubmission_ltisubmissions'));
+
 $settings->add(new admin_setting_configcheckbox('assignsubmission_ltisubmissions/default',
-                   new lang_string('default', 'assignsubmission_ltisubmissions'),
-                   new lang_string('default_help', 'assignsubmission_ltisubmissions'), 1));
+    new lang_string('default', 'assignsubmission_ltisubmissions'),
+    new lang_string('default_help', 'assignsubmission_ltisubmissions'),
+    1));
 
 $settings->add(new admin_setting_configtext('assignsubmission_ltisubmissions/draftfiles',
-                   new lang_string('draftfiles', 'assignsubmission_ltisubmissions'),
-                   new lang_string('draftfiles_help', 'assignsubmission_ltisubmissions'), 1, PARAM_INT));
+    new lang_string('draftfiles', 'assignsubmission_ltisubmissions'),
+    new lang_string('draftfiles_help', 'assignsubmission_ltisubmissions'),
+    1,
+    PARAM_INT));
 
 $settings->add(new admin_setting_configtext('assignsubmission_ltisubmissions/finalfiles',
-                   new lang_string('finalfiles', 'assignsubmission_ltisubmissions'),
-                   new lang_string('finalfiles_help', 'assignsubmission_ltisubmissions'), 1, PARAM_INT));
+    new lang_string('finalfiles', 'assignsubmission_ltisubmissions'),
+    new lang_string('finalfiles_help', 'assignsubmission_ltisubmissions'),
+    1,
+    PARAM_INT));
 
 $query = "SELECT id, name
-                FROM {lti_types}
-               WHERE course = 1
-                 AND state = 1
-            ORDER BY name ASC";
+            FROM {lti_types}
+           WHERE course = 1
+             AND state = 1
+        ORDER BY name ASC";
 $options = $DB->get_records_sql_menu($query);
+
 $settings->add(new admin_setting_configmultiselect('assignsubmission_ltisubmissions/defaulttypeids',
-                   new lang_string('defaulttypeids', 'assignsubmission_ltisubmissions'),
-                   new lang_string('defaulttypeids_help', 'assignsubmission_ltisubmissions'), [], $options));
+    new lang_string('defaulttypeids', 'assignsubmission_ltisubmissions'),
+    new lang_string('defaulttypeids_help', 'assignsubmission_ltisubmissions'), [], $options));

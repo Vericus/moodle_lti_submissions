@@ -26,10 +26,9 @@ define('NO_DEBUG_DISPLAY', true);
 define('NO_MOODLE_COOKIES', true);
 
 require_once(__DIR__ . "/../../../../config.php");
-require_once($CFG->dirroot.'/mod/lti/locallib.php');
-require_once($CFG->dirroot.'/mod/lti/servicelib.php');
-require_once($CFG->dirroot.'/mod/assign/submission/ltisubmissions/lib.php');
-
+require_once($CFG->dirroot . '/mod/lti/locallib.php');
+require_once($CFG->dirroot . '/mod/lti/servicelib.php');
+require_once($CFG->dirroot . '/mod/assign/submission/ltisubmissions/lib.php');
 
 // TODO: Switch to core oauthlib once implemented - MDL-30149.
 use mod_lti\service_exception_handler;
@@ -38,7 +37,7 @@ use ltiservice_basicoutcomes\local\service\basicoutcomes;
 
 $rawbody = file_get_contents("php://input");
 
-$logrequests  = lti_should_log_request($rawbody);
+$logrequests = lti_should_log_request($rawbody);
 $errorhandler = new service_exception_handler($logrequests);
 
 // Register our own error handler so we can always send valid XML response.
@@ -101,22 +100,22 @@ switch ($messagetype) {
         lti_verify_sourcedid($ltiinstance, $parsed);
         lti_set_session_user($parsed->userid);
 
-        $gradestatus = assignlti_update_grade($ltiinstance, $parsed->userid, $parsed->gradeval);
+        $gradestatus = assignsubmission_ltisubmissions_update_grade($ltiinstance, $parsed->userid, $parsed->gradeval);
 
         if (!$gradestatus) {
             throw new Exception('Grade replace response');
         }
 
         $responsexml = lti_get_response_xml(
-                'success',
-                'Grade replace response',
-                $parsed->messageid,
-                'replaceResultResponse'
+            'success',
+            'Grade replace response',
+            $parsed->messageid,
+            'replaceResultResponse'
         );
 
         echo $responsexml->asXML();
 
-    break;
+        break;
 
     case 'readResultRequest':
         $parsed = lti_parse_grade_read_message($xml);
@@ -133,13 +132,13 @@ switch ($messagetype) {
 
         lti_verify_sourcedid($ltiinstance, $parsed);
 
-        $grade = assignlti_read_grade($ltiinstance, $parsed->userid);
+        $grade = assignsubmission_ltisubmissions_read_grade($ltiinstance, $parsed->userid);
 
         $responsexml = lti_get_response_xml(
-                'success',  // Empty grade is also 'success'.
-                'Result read',
-                $parsed->messageid,
-                'readResultResponse'
+            'success',  // Empty grade is also 'success'.
+            'Result read',
+            $parsed->messageid,
+            'readResultResponse'
         );
 
         $node = $responsexml->imsx_POXBody->readResultResponse;
@@ -149,13 +148,13 @@ switch ($messagetype) {
 
         echo $responsexml->asXML();
 
-    break;
+        break;
 
     case 'deleteResultRequest':
         $parsed = lti_parse_grade_delete_message($xml);
 
         $psuedoltiinstance = $DB->get_record('assign', ['id' => $parsed->instanceid]);
-        $ltiinstance->typeid = assignsubmission_get_psuedoltitypeid($psuedoltiinstance);
+        $ltiinstance->typeid = assignsubmission_ltisubmissions_get_psuedoltitypeid($psuedoltiinstance);
         if (!lti_accepts_grades($psuedoltiinstance)) {
             throw new Exception('Tool does not accept grades');
         }
@@ -170,13 +169,13 @@ switch ($messagetype) {
         }
 
         $responsexml = lti_get_response_xml(
-                'success',
-                'Grade delete request',
-                $parsed->messageid,
-                'deleteResultResponse'
+            'success',
+            'Grade delete request',
+            $parsed->messageid,
+            'deleteResultResponse'
         );
 
         echo $responsexml->asXML();
 
-    break;
+        break;
 }

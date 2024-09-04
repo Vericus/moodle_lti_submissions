@@ -17,9 +17,9 @@
 /**
  * This file contains a class definition for the Memberships service
  *
- * @package    assignsubmission_ltisubmissions
- * @copyright 2023 Moodle India {@link https://moodle.com/in/}
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     assignsubmission_ltisubmissions
+ * @copyright   2023 Moodle India {@link https://moodle.com/in/}
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace assignsubmission_ltisubmissions\service\memberships\local\service;
@@ -27,12 +27,12 @@ namespace assignsubmission_ltisubmissions\service\memberships\local\service;
 /**
  * A service extending Memberships.
  *
- * @package    assignsubmission_ltisubmissions
- * @copyright 2023 Moodle India {@link https://moodle.com/in/}
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     assignsubmission_ltisubmissions
+ * @copyright   2023 Moodle India {@link https://moodle.com/in/}
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class memberships extends \assignsubmission_ltisubmissions\service_base {
-        /** Default prefix for context-level roles */
+    /** Default prefix for context-level roles */
     const CONTEXT_ROLE_PREFIX = 'http://purl.imsglobal.org/vocab/lis/v2/membership#';
     /** Context-level role for Instructor */
     const CONTEXT_ROLE_INSTRUCTOR = 'http://purl.imsglobal.org/vocab/lis/v2/membership#Instructor';
@@ -124,7 +124,7 @@ class memberships extends \assignsubmission_ltisubmissions\service_base {
         global $DB;
 
         debugging('get_users_json() has been deprecated, ' .
-                  'please use memberships::get_members_json() instead.', DEBUG_DEVELOPER);
+            'please use memberships::get_members_json() instead.', DEBUG_DEVELOPER);
 
         $course = $DB->get_record('course', ['id' => $contextid], 'id,shortname,fullname', IGNORE_MISSING);
 
@@ -166,13 +166,13 @@ class memberships extends \assignsubmission_ltisubmissions\service_base {
                 $withcapability = self::INSTRUCTOR_CAPABILITY;
             } else if ($role === self::CONTEXT_ROLE_LEARNER) {
                 $exclude = array_keys(get_enrolled_users($context, self::INSTRUCTOR_CAPABILITY, 0, 'u.id',
-                                                         null, null, null, true));
+                    null, null, null, true));
             }
         }
         $users = get_enrolled_users($context, $withcapability, 0, 'u.*', null, 0, 0, true);
         if (($response->get_accept() === 'application/vnd.ims.lti-nrps.v2.membershipcontainer+json') ||
             (($response->get_accept() !== 'application/vnd.ims.lis.v2.membershipcontainer+json') &&
-            ($this->get_type()->ltiversion === LTI_VERSION_1P3))) {
+                ($this->get_type()->ltiversion === LTI_VERSION_1P3))) {
             $json = $this->users_to_json($resource, $users, $course, $exclude, $limitfrom, $limitnum, $lti, $info, $response);
         } else {
             $json = $this->users_to_jsonld($resource, $users, $course->id, $exclude, $limitfrom, $limitnum, $lti, $info, $response);
@@ -200,7 +200,7 @@ class memberships extends \assignsubmission_ltisubmissions\service_base {
      * @return string
      */
     private function users_to_jsonld($resource, $users, $contextid, $exclude, $limitfrom, $limitnum,
-            $lti, $info, $response) {
+        $lti, $info, $response) {
         global $DB;
 
         $tool = $this->get_type();
@@ -243,7 +243,7 @@ class memberships extends \assignsubmission_ltisubmissions\service_base {
             }
 
             $member = new \stdClass();
-            $member->{"@type" } = 'LISPerson';
+            $member->{"@type"} = 'LISPerson';
             $membership = new \stdClass();
             $membership->status = 'Active';
             $membership->role = explode(',', lti_get_ims_role($user->id, null, $contextid, true));
@@ -253,51 +253,58 @@ class memberships extends \assignsubmission_ltisubmissions\service_base {
                 $instanceconfig = lti_get_type_config_from_instance($lti->id);
             }
             $isallowedlticonfig = self::is_allowed_field_set($toolconfig, $instanceconfig,
-                                    ['name' => 'sendname', 'email' => 'sendemailaddr']);
+                ['name' => 'sendname', 'email' => 'sendemailaddr']);
 
             $includedcapabilities = [
-                'User.id'              => ['type' => 'id',
-                                            'member.field' => 'userId',
-                                            'source.value' => $user->id,
-                                        ],
-                'Person.sourcedId'     => ['type' => 'id',
-                                            'member.field' => 'sourcedId',
-                                            'source.value' => format_string($user->idnumber),
-                                        ],
-                'Person.name.full'     => ['type' => 'name',
-                                            'member.field' => 'name',
-                                            'source.value' => format_string("{$user->firstname} {$user->lastname}"),
-                                        ],
-                'Person.name.given'    => ['type' => 'name',
-                                            'member.field' => 'givenName',
-                                            'source.value' => format_string($user->firstname),
-                                        ],
-                'Person.name.family'   => ['type' => 'name',
-                                            'member.field' => 'familyName',
-                                            'source.value' => format_string($user->lastname),
-                                        ],
-                'Person.email.primary' => ['type' => 'email',
-                                            'member.field' => 'email',
-                                            'source.value' => format_string($user->email),
-                                        ],
-                'User.username'        => ['type' => 'name',
-                                           'member.field' => 'ext_user_username',
-                                           'source.value' => format_string($user->username),
-                                       ],
+                'User.id' => [
+                    'type' => 'id',
+                    'member.field' => 'userId',
+                    'source.value' => $user->id,
+                ],
+                'Person.sourcedId' => [
+                    'type' => 'id',
+                    'member.field' => 'sourcedId',
+                    'source.value' => format_string($user->idnumber),
+                ],
+                'Person.name.full' => [
+                    'type' => 'name',
+                    'member.field' => 'name',
+                    'source.value' => format_string("{$user->firstname} {$user->lastname}"),
+                ],
+                'Person.name.given' => [
+                    'type' => 'name',
+                    'member.field' => 'givenName',
+                    'source.value' => format_string($user->firstname),
+                ],
+                'Person.name.family' => [
+                    'type' => 'name',
+                    'member.field' => 'familyName',
+                    'source.value' => format_string($user->lastname),
+                ],
+                'Person.email.primary' => [
+                    'type' => 'email',
+                    'member.field' => 'email',
+                    'source.value' => format_string($user->email),
+                ],
+                'User.username' => [
+                    'type' => 'name',
+                    'member.field' => 'ext_user_username',
+                    'source.value' => format_string($user->username),
+                ],
             ];
 
             if (!is_null($lti)) {
                 $message = new \stdClass();
                 $message->message_type = 'basic-lti-launch-request';
                 $conditions = ['courseid' => $contextid, 'itemtype' => 'mod',
-                        'itemmodule' => 'assign', 'iteminstance' => $lti->id,
-                    ];
+                    'itemmodule' => 'assign', 'iteminstance' => $lti->id,
+                ];
 
                 if (!empty($lti->servicesalt) && $DB->record_exists('grade_items', $conditions)) {
                     $message->lis_result_sourcedid = json_encode(lti_build_sourcedid($lti->id,
-                                                                                     $user->id,
-                                                                                     $lti->servicesalt,
-                                                                                     $lti->typeid));
+                        $user->id,
+                        $lti->servicesalt,
+                        $lti->typeid));
                     // Not per specification but added to comply with earlier version of the service.
                     $member->resultSourcedId = $message->lis_result_sourcedid;
                 }
@@ -311,8 +318,8 @@ class memberships extends \assignsubmission_ltisubmissions\service_base {
                     }
                 } else {
                     if (($capability['type'] === 'id')
-                     || ($capability['type'] === 'name' && $isallowedlticonfig['name'])
-                     || ($capability['type'] === 'email' && $isallowedlticonfig['email'])) {
+                        || ($capability['type'] === 'name' && $isallowedlticonfig['name'])
+                        || ($capability['type'] === 'email' && $isallowedlticonfig['email'])) {
                         $member->{$capability['member.field']} = $capability['source.value'];
                     }
                 }
@@ -355,7 +362,7 @@ class memberships extends \assignsubmission_ltisubmissions\service_base {
      * @return string
      */
     private function users_to_json($resource, $users, $course, $exclude, $limitfrom, $limitnum,
-            $lti, $info, $response) {
+        $lti, $info, $response) {
         global $DB, $CFG;
 
         $tool = $this->get_type();
@@ -403,52 +410,52 @@ class memberships extends \assignsubmission_ltisubmissions\service_base {
             }
             if (!$islti2) {
                 $isallowedlticonfig = self::is_allowed_field_set($toolconfig, $instanceconfig,
-                                        ['name' => 'sendname', 'givenname' => 'sendname',
-                                        'familyname' => 'sendname', 'email' => 'sendemailaddr',
-                                     ]);
+                    ['name' => 'sendname', 'givenname' => 'sendname',
+                        'familyname' => 'sendname', 'email' => 'sendemailaddr',
+                    ]);
             } else {
                 $isallowedlticonfig = self::is_allowed_capability_set($tool,
-                                        ['name' => 'Person.name.full', 'givenname' => 'Person.name.given',
-                                         'familyname' => 'Person.name.family', 'email' => 'Person.email.primary',
-                                     ]);
+                    ['name' => 'Person.name.full', 'givenname' => 'Person.name.given',
+                        'familyname' => 'Person.name.family', 'email' => 'Person.email.primary',
+                    ]);
             }
             $includedcapabilities = [
-                'User.id'              => ['type' => 'id',
-                                            'member.field' => 'user_id',
-                                            'source.value' => $user->id,
-                                        ],
-                'Person.sourcedId'     => ['type' => 'id',
-                                            'member.field' => 'lis_person_sourcedid',
-                                            'source.value' => format_string($user->idnumber),
-                                        ],
-                'Person.name.full'     => ['type' => 'name',
-                                            'member.field' => 'name',
-                                            'source.value' => format_string("{$user->firstname} {$user->lastname}"),
-                                        ],
-                'Person.name.given'    => ['type' => 'givenname',
-                                            'member.field' => 'given_name',
-                                            'source.value' => format_string($user->firstname),
-                                        ],
-                'Person.name.family'   => ['type' => 'familyname',
-                                            'member.field' => 'family_name',
-                                            'source.value' => format_string($user->lastname),
-                                        ],
+                'User.id' => ['type' => 'id',
+                    'member.field' => 'user_id',
+                    'source.value' => $user->id,
+                ],
+                'Person.sourcedId' => ['type' => 'id',
+                    'member.field' => 'lis_person_sourcedid',
+                    'source.value' => format_string($user->idnumber),
+                ],
+                'Person.name.full' => ['type' => 'name',
+                    'member.field' => 'name',
+                    'source.value' => format_string("{$user->firstname} {$user->lastname}"),
+                ],
+                'Person.name.given' => ['type' => 'givenname',
+                    'member.field' => 'given_name',
+                    'source.value' => format_string($user->firstname),
+                ],
+                'Person.name.family' => ['type' => 'familyname',
+                    'member.field' => 'family_name',
+                    'source.value' => format_string($user->lastname),
+                ],
                 'Person.email.primary' => ['type' => 'email',
-                                            'member.field' => 'email',
-                                            'source.value' => format_string($user->email),
-                                        ],
-                'User.username'        => ['type' => 'name',
-                                           'member.field' => 'ext_user_username',
-                                           'source.value' => format_string($user->username),
-                                       ],
+                    'member.field' => 'email',
+                    'source.value' => format_string($user->email),
+                ],
+                'User.username' => ['type' => 'name',
+                    'member.field' => 'ext_user_username',
+                    'source.value' => format_string($user->username),
+                ],
             ];
 
             if (!is_null($lti)) {
                 $message = new \stdClass();
                 $message->{'https://purl.imsglobal.org/spec/lti/claim/message_type'} = 'LtiResourceLinkRequest';
                 $conditions = ['courseid' => $course->id, 'itemtype' => 'mod',
-                        'itemmodule' => 'assign', 'iteminstance' => $lti->id,
-                    ];
+                    'itemmodule' => 'assign', 'iteminstance' => $lti->id,
+                ];
 
                 if (!empty($lti->servicesalt) && $DB->record_exists('grade_items', $conditions)) {
                     $basicoutcome = new \stdClass();
@@ -505,7 +512,7 @@ class memberships extends \assignsubmission_ltisubmissions\service_base {
             if (!$allowed && isset($toolconfig[$field]) && (self::DELEGATE_TO_INSTRUCTOR == $toolconfig[$field]) &&
                 !is_null($instanceconfig)) {
                 $allowed = isset($instanceconfig->{"lti_{$field}"}) &&
-                          ($instanceconfig->{"lti_{$field}"} == self::INSTRUCTOR_INCLUDED);
+                    ($instanceconfig->{"lti_{$field}"} == self::INSTRUCTOR_INCLUDED);
             }
             $isallowedstate[$key] = $allowed;
         }

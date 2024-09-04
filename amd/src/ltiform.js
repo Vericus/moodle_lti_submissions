@@ -21,43 +21,43 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 import $ from 'jquery';
-import {get_string as getString} from 'core/str';
+import { get_string as getString } from 'core/str';
 export const init = (hideoptions) => {
     // var skipClientValidation = false;
-    $(document).on('click', '#id_assignsubmission_ltisubmissions_enabled', function(){
+    $(document).on('click', '#id_assignsubmission_ltisubmissions_enabled', function () {
         var ltisubmissionname = $(this).attr('name');
-        if($(this).is(':checked')){
-            $('#fgroup_id_submissionplugins').find(':checkbox').each(function(){
+        if ($(this).is(':checked')) {
+            $('#fgroup_id_submissionplugins').find(':checkbox').each(function () {
                 var elementname = $(this).attr('name');
-                if(ltisubmissionname != elementname &&
-                elementname.startsWith('assignsubmission_') && elementname.endsWith('_enabled')){
-                    if($(this).is(':checked')){
+                if (ltisubmissionname != elementname &&
+                    elementname.startsWith('assignsubmission_') && elementname.endsWith('_enabled')) {
+                    if ($(this).is(':checked')) {
                         $(this).trigger('click');
                     }
                     $(this).attr('disabled', true);
                 }
             });
-        }else{
-            $('#fgroup_id_submissionplugins').find(':checkbox').each(function(){
+        } else {
+            $('#fgroup_id_submissionplugins').find(':checkbox').each(function () {
                 var elementname = $(this).attr('name');
-                if(ltisubmissionname != elementname && elementname.startsWith('assignsubmission_')
-                && elementname.endsWith('_enabled')){
+                if (ltisubmissionname != elementname && elementname.startsWith('assignsubmission_')
+                    && elementname.endsWith('_enabled')) {
                     $(this).attr('disabled', false);
                 }
             });
         }
     });
-    $(document).ready(function(){
-        if($('#id_assignsubmission_ltisubmissions_enabled').is(':checked')){
-            if(hideoptions){// cannot edit if the activity is once defined as of type ltisubmission
+    $(document).ready(function () {
+        if ($('#id_assignsubmission_ltisubmissions_enabled').is(':checked')) {
+            if (hideoptions) {// cannot edit if the activity is once defined as of type ltisubmission
                 $('#fgroup_id_submissionplugins').hide();
             }
             var ltisubmissionname = $('#id_assignsubmission_ltisubmissions_enabled').attr('name');
-            $('#fgroup_id_submissionplugins').find(':checkbox').each(function(){
+            $('#fgroup_id_submissionplugins').find(':checkbox').each(function () {
                 var elementname = $(this).attr('name');
-                if(ltisubmissionname != elementname && elementname.startsWith('assignsubmission_')
-                && elementname.endsWith('_enabled')){
-                    if($(this).is(':checked')){
+                if (ltisubmissionname != elementname && elementname.startsWith('assignsubmission_')
+                    && elementname.endsWith('_enabled')) {
+                    if ($(this).is(':checked')) {
                         $(this).trigger('click');
                     }
                     $(this).attr('disabled', true);
@@ -65,19 +65,19 @@ export const init = (hideoptions) => {
             });
         }
     });
-    $(document).find("form[action='modedit.php']").on( "submit", function(e) {
-        if($(e.originalEvent.submitter).data('skipValidation') == 1){
+    $(document).find("form[action='modedit.php']").on("submit", function (e) {
+        if ($(e.originalEvent.submitter).data('skipValidation') == 1) {
             return true;
         }
         var formData = $(this).serializeArray();
         var data = [];
-        $.each(formData, function(index, field){
+        $.each(formData, function (index, field) {
             data[field.name] = field.value;
         });
         if (data.assignsubmission_ltisubmissions_enabled == 1) {
             var scrollindex = '';
             var expandheader = false;
-            if(typeof(data.maxattempts) != undefined && data.maxattempts != -1) {
+            if (typeof (data.maxattempts) !== 'undefined' && data.maxattempts != -1) {
                 $('#id_maxattempts').addClass('is-invalid');
                 getString('maxattemptserror', 'assignsubmission_ltisubmissions').then(function (error) {
                     $('#id_error_maxattempts').html(error);
@@ -88,7 +88,7 @@ export const init = (hideoptions) => {
                 $('#id_maxattempts').removeClass('is-invalid');
                 $('#id_error_maxattempts').html('');
             }
-            if(typeof(data.attemptreopenmethod) != undefined && data.attemptreopenmethod != 'untilpass') {
+            if (typeof (data.attemptreopenmethod) !== 'undefined' && data.attemptreopenmethod != 'untilpass') {
                 $('#id_attemptreopenmethod').addClass('is-invalid');
                 getString('attemptreopenmethoderror', 'assignsubmission_ltisubmissions').then(function (error) {
                     $('#id_error_attemptreopenmethod').html(error);
@@ -99,7 +99,7 @@ export const init = (hideoptions) => {
                 $('#id_attemptreopenmethod').removeClass('is-invalid');
                 $('#id_error_attemptreopenmethod').html('');
             }
-            if(typeof(data.requiresubmissionstatement) != undefined && data.requiresubmissionstatement != 0) {
+            if (typeof (data.requiresubmissionstatement) !== 'undefined' && data.requiresubmissionstatement != 0) {
                 $('#id_requiresubmissionstatement').addClass('is-invalid');
                 getString('requiresubmissionstatementerror', 'assignsubmission_ltisubmissions').then(function (error) {
                     $('#id_error_requiresubmissionstatement').html(error);
@@ -110,7 +110,7 @@ export const init = (hideoptions) => {
                 $('#id_requiresubmissionstatement').removeClass('is-invalid');
                 $('#id_error_requiresubmissionstatement').html('');
             }
-            if(typeof(data.submissiondrafts) != undefined && data.submissiondrafts != 0) {
+            if (typeof (data.submissiondrafts) !== 'undefined' && data.submissiondrafts != 0) {
                 $('#id_submissiondrafts').addClass('is-invalid');
                 getString('submissiondraftserror', 'assignsubmission_ltisubmissions').then(function (error) {
                     $('#id_error_submissiondrafts').html(error);
@@ -121,7 +121,7 @@ export const init = (hideoptions) => {
                 $('#id_submissiondrafts').removeClass('is-invalid');
                 $('#id_error_submissiondrafts').html('');
             }
-            if(data.typeid == 0){
+            if (data.typeid == 0) {
                 $('#id_typeid').addClass('is-invalid');
                 getString('invalidtypeid', 'assignsubmission_ltisubmissions').then(function (error) {
                     $('#id_error_typeid').html(error);
@@ -131,7 +131,7 @@ export const init = (hideoptions) => {
                 $('#id_typeid').removeClass('is-invalid');
                 $('#id_error_typeid').html('');
             }
-            if(scrollindex != ''){
+            if (scrollindex != '') {
                 if (expandheader && $('#id_submissionsettings [data-toggle="collapse"]').attr('aria-expanded') == 'false') {
                     $('#id_submissionsettings [data-toggle="collapse"]').trigger('click');
                 }

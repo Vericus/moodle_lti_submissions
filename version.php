@@ -17,14 +17,14 @@
 /**
  * This file contains the version information for the file submission plugin
  *
- * @package    assignsubmission_ltisubmissions
- * @copyright 2023 Moodle India {@link https://moodle.com/in/}
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     assignsubmission_ltisubmissions
+ * @copyright   2023 Moodle India {@link https://moodle.com/in/}
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2022112806;
+$plugin->version = 2024072600;
 $plugin->requires  = 2022111800;
 $plugin->component = 'assignsubmission_ltisubmissions';
 $plugin->incompatible = 405;

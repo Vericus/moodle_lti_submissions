@@ -17,9 +17,9 @@
 /**
  * This file contains a class definition for the LISResult container resource
  *
- * @package    assignsubmission_ltisubmissions
- * @copyright 2023 Moodle India {@link https://moodle.com/in/}
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     assignsubmission_ltisubmissions
+ * @copyright   2023 Moodle India {@link https://moodle.com/in/}
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace assignsubmission_ltisubmissions\service\gradebookservices\local\resources;
@@ -31,9 +31,9 @@ use mod_lti\local\ltiservice\resource_base;
 /**
  * A resource implementing LISResult container.
  *
- * @package    assignsubmission_ltisubmissions
- * @copyright 2023 Moodle India {@link https://moodle.com/in/}
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     assignsubmission_ltisubmissions
+ * @copyright   2023 Moodle India {@link https://moodle.com/in/}
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class scores extends \ltiservice_gradebookservices\local\resources\scores {
     /**
@@ -71,7 +71,7 @@ class scores extends \ltiservice_gradebookservices\local\resources\scores {
             $typeid = $this->get_service()->get_type()->id;
 
             if (empty($contextid) || !($container ^ ($response->get_request_method() === self::HTTP_POST)) ||
-                    (!empty($contenttype) && !in_array($contenttype, $this->formats))) {
+                (!empty($contenttype) && !in_array($contenttype, $this->formats))) {
                 throw new \Exception('No context or unsupported content type', 400);
             }
             if (!($course = $DB->get_record('course', ['id' => $contextid], 'id', IGNORE_MISSING))) {
@@ -98,14 +98,14 @@ class scores extends \ltiservice_gradebookservices\local\resources\scores {
             if ($ltilinkid != null) {
                 if (is_null($typeid)) {
                     if (isset($item->iteminstance) && (!gradebookservices::check_lti_id($ltilinkid, $item->courseid,
-                            $this->get_service()->get_tool_proxy()->id))) {
+                        $this->get_service()->get_tool_proxy()->id))) {
                         $response->set_code(403);
                         $response->set_reason("Invalid LTI id supplied.");
                         return;
                     }
                 } else {
                     if (isset($item->iteminstance) && (!gradebookservices::check_lti_1x_id($ltilinkid, $item->courseid,
-                            $typeid))) {
+                        $typeid))) {
                         $response->set_code(403);
                         $response->set_reason("Invalid LTI id supplied.");
                         return;
@@ -113,7 +113,7 @@ class scores extends \ltiservice_gradebookservices\local\resources\scores {
                 }
             }
             $json = '[]';
-            require_once($CFG->libdir.'/gradelib.php');
+            require_once($CFG->libdir . '/gradelib.php');
             switch ($response->get_request_method()) {
                 case 'GET':
                     $response->set_code(405);
@@ -154,17 +154,17 @@ class scores extends \ltiservice_gradebookservices\local\resources\scores {
         global $CFG;
         $score = json_decode($body);
         if (empty($score) ||
-                !isset($score->userId) ||
-                !isset($score->timestamp) ||
-                !isset($score->gradingProgress) ||
-                !isset($score->activityProgress) ||
-                !isset($score->timestamp) ||
-                isset($score->timestamp) && !gradebookservices::validate_iso8601_date($score->timestamp) ||
-                (isset($score->scoreGiven) && !is_numeric($score->scoreGiven)) ||
-                (isset($score->scoreGiven) && !isset($score->scoreMaximum)) ||
-                (isset($score->scoreMaximum) && !is_numeric($score->scoreMaximum)) ||
-                (!gradebookservices::is_user_gradable_in_course($contextid, $score->userId))
-                ) {
+            !isset($score->userId) ||
+            !isset($score->timestamp) ||
+            !isset($score->gradingProgress) ||
+            !isset($score->activityProgress) ||
+            !isset($score->timestamp) ||
+            isset($score->timestamp) && !gradebookservices::validate_iso8601_date($score->timestamp) ||
+            (isset($score->scoreGiven) && !is_numeric($score->scoreGiven)) ||
+            (isset($score->scoreGiven) && !isset($score->scoreMaximum)) ||
+            (isset($score->scoreMaximum) && !is_numeric($score->scoreMaximum)) ||
+            (!gradebookservices::is_user_gradable_in_course($contextid, $score->userId))
+        ) {
             throw new \Exception('Incorrect score received' . $body, 400);
         }
 
@@ -177,7 +177,7 @@ class scores extends \ltiservice_gradebookservices\local\resources\scores {
         $response->set_code(200);
         $grade = \grade_grade::fetch(['itemid' => $item->id, 'userid' => $score->userId]);
 
-        if ($grade &&  !empty($grade->timemodified)) {
+        if ($grade && !empty($grade->timemodified)) {
             if ($grade->timemodified >= strtotime($score->timestamp)) {
                 $exmsg = "Refusing score with an earlier timestamp for item " . $item->id . " and user " . $score->userId;
                 throw new \Exception($exmsg, 409);

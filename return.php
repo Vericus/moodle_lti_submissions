@@ -23,8 +23,8 @@
  */
 
 require_once('../../../../config.php');
-require_once($CFG->dirroot.'/mod/lti/lib.php');
-require_once($CFG->dirroot.'/mod/lti/locallib.php');
+require_once($CFG->dirroot . '/mod/lti/lib.php');
+require_once($CFG->dirroot . '/mod/lti/locallib.php');
 
 $courseid = required_param('course', PARAM_INT);
 $instanceid = optional_param('instanceid', 0, PARAM_INT);
@@ -43,7 +43,6 @@ if (!empty($instanceid)) {
     $cm = get_coursemodule_from_instance('assign', $psuedolti->id, $psuedolti->course, false, MUST_EXIST);
     $context = context_module::instance($cm->id);
 }
-
 
 require_login($course);
 require_sesskey();
@@ -126,7 +125,7 @@ if (!empty($errormsg)) {
             </script>
         ";
 
-        $clickhere = get_string('return_to_course', 'lti', (object)['link' => $url]);
+        $clickhere = get_string('return_to_course', 'lti', (object) ['link' => $url]);
 
         $noscript = "
             <noscript>

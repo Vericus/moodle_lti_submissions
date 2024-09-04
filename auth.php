@@ -17,9 +17,9 @@
 /**
  * This file responds to a login authentication request
  *
- * @package    assignsubmission_ltisubmissions
- * @copyright 2023 Moodle India {@link https://moodle.com/in/}
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     assignsubmission_ltisubmissions
+ * @copyright   2023 Moodle India {@link https://moodle.com/in/}
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 require_once(__DIR__ . '/../../../../config.php');
@@ -37,7 +37,6 @@ if (!isloggedin() && empty($_POST['repost'])) {
     echo $output->render($page);
     echo $output->footer();
     return;
-    throw new Exception("Not Logged In", 1);
 }
 
 $scope = optional_param('scope', '', PARAM_TEXT);
@@ -52,8 +51,8 @@ $nonce = optional_param('nonce', '', PARAM_TEXT);
 $prompt = optional_param('prompt', '', PARAM_TEXT);
 
 $ok = !empty($scope) && !empty($responsetype) && !empty($clientid) &&
-      !empty($redirecturi) && !empty($loginhint) &&
-      !empty($nonce);
+    !empty($redirecturi) && !empty($loginhint) &&
+    !empty($nonce);
 
 if (!$ok) {
     $error = 'invalid_request';
@@ -127,8 +126,8 @@ if ($ok && $id) {
     require_capability('mod/assign:view', $context);
     $psuedolti = $DB->get_record('assign', ['id' => $cm->instance], '*', MUST_EXIST);
     $psuedolti->cmid = $cm->id;
-    $psuedolti->typeid = assignsubmission_get_psuedoltitypeid($psuedolti);
-    list($endpoint, $params) = assignsubmission_lti_get_launch_data($psuedolti, $nonce, $messagetype, $foruserid);
+    $psuedolti->typeid = assignsubmission_ltisubmissions_get_psuedoltitypeid($psuedolti);
+    list($endpoint, $params) = assignsubmission_ltisubmissions_get_launch_data($psuedolti, $nonce, $messagetype, $foruserid);
 } else {
     $params['error'] = $error;
     if (!empty($desc)) {
@@ -140,7 +139,7 @@ if (isset($state)) {
 }
 unset($SESSION->lti_message_hint);
 $r = '<form action="' . $redirecturi . "\" name=\"ltiAuthForm\" id=\"ltiAuthForm\" " .
-     "method=\"post\" enctype=\"application/x-www-form-urlencoded\">\n";
+    "method=\"post\" enctype=\"application/x-www-form-urlencoded\">\n";
 if (!empty($params)) {
     foreach ($params as $key => $value) {
         $key = htmlspecialchars($key, ENT_COMPAT);

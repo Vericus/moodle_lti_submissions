@@ -17,9 +17,9 @@
 /**
  * This file contains an abstract definition of an LTI service
  *
- * @package    assignsubmission_ltisubmissions
- * @copyright 2023 Moodle India {@link https://moodle.com/in/}
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     assignsubmission_ltisubmissions
+ * @copyright   2023 Moodle India {@link https://moodle.com/in/}
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 
@@ -264,7 +264,7 @@ abstract class service_base {
      * @return array containing the target link URL and the custom params string to use.
      */
     public function override_endpoint(string $messagetype, string $targetlinkuri,
-            ?string $customstr, int $courseid, ?object $lti = null): array {
+        ?string $customstr, int $courseid, ?object $lti = null): array {
         return [$targetlinkuri, $customstr];
     }
 
@@ -464,7 +464,7 @@ abstract class service_base {
     public function check_tool_proxy($toolproxyguid, $body = null) {
 
         debugging('check_tool_proxy() is deprecated to allow LTI 1 connections to support services. ' .
-                  'Please use service_base::check_tool() instead.', DEBUG_DEVELOPER);
+            'Please use service_base::check_tool() instead.', DEBUG_DEVELOPER);
         $ok = false;
         $toolproxy = null;
         $consumerkey = lti\get_oauth_key_from_headers();
@@ -503,7 +503,7 @@ abstract class service_base {
      */
     public function check_type($typeid, $courseid, $body = null) {
         debugging('check_type() is deprecated to allow LTI 1 connections to support services. ' .
-                  'Please use service_base::check_tool() instead.', DEBUG_DEVELOPER);
+            'Please use service_base::check_tool() instead.', DEBUG_DEVELOPER);
         $ok = false;
         $tool = null;
         $consumerkey = lti\get_oauth_key_from_headers();

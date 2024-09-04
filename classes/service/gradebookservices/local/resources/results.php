@@ -17,9 +17,9 @@
 /**
  * This file contains a class definition for the LISResults container resource
  *
- * @package    assignsubmission_ltisubmissions
- * @copyright 2023 Moodle India {@link https://moodle.com/in/}
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     assignsubmission_ltisubmissions
+ * @copyright   2023 Moodle India {@link https://moodle.com/in/}
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace assignsubmission_ltisubmissions\service\gradebookservices\local\resources;
@@ -31,9 +31,9 @@ use assignsubmission_ltisubmissions\resource_base;
 /**
  * A resource implementing LISResult container.
  *
- * @package    assignsubmission_ltisubmissions
- * @copyright 2023 Moodle India {@link https://moodle.com/in/}
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     assignsubmission_ltisubmissions
+ * @copyright   2023 Moodle India {@link https://moodle.com/in/}
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class results extends \ltiservice_gradebookservices\local\resources\results {
     /**
@@ -83,21 +83,21 @@ class results extends \ltiservice_gradebookservices\local\resources\results {
             if ($ltilinkid != null) {
                 if (is_null($typeid)) {
                     if (isset($item->iteminstance) && (!gradebookservices::check_lti_id($ltilinkid, $item->courseid,
-                            $this->get_service()->get_tool_proxy()->id))) {
+                        $this->get_service()->get_tool_proxy()->id))) {
                         $response->set_code(403);
                         $response->set_reason("Invalid LTI id supplied.");
                         return;
                     }
                 } else {
                     if (isset($item->iteminstance) && (!gradebookservices::check_lti_1x_id($ltilinkid, $item->courseid,
-                            $typeid))) {
+                        $typeid))) {
                         $response->set_code(403);
                         $response->set_reason("Invalid LTI id supplied.");
                         return;
                     }
                 }
             }
-            require_once($CFG->libdir.'/gradelib.php');
+            require_once($CFG->libdir . '/gradelib.php');
             switch ($response->get_request_method()) {
                 case 'GET':
                     $useridfilter = optional_param('user_id', 0, PARAM_INT);
@@ -105,7 +105,7 @@ class results extends \ltiservice_gradebookservices\local\resources\results {
                     $limitfrom = optional_param('from', 0, PARAM_INT);
                     $typeid = optional_param('type_id', null, PARAM_TEXT);
                     $json = $this->get_json_for_get_request($item->id, $limitfrom, $limitnum,
-                            $useridfilter, $typeid, $response);
+                        $useridfilter, $typeid, $response);
                     $response->set_content_type($this->formats[0]);
                     $response->set_body($json);
                     break;

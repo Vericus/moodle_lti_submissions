@@ -17,9 +17,9 @@
 /**
  * This file contains a class definition for the Link Memberships resource
  *
- * @package    assignsubmission_ltisubmissions
- * @copyright 2023 Moodle India {@link https://moodle.com/in/}
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     assignsubmission_ltisubmissions
+ * @copyright   2023 Moodle India {@link https://moodle.com/in/}
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 
@@ -35,9 +35,9 @@ use core_availability\info_module;
  * version of the LTI specification. It is replaced by the
  * rlid parameter in the context membership URL.
  *
- * @package    assignsubmission_ltisubmissions
- * @copyright 2023 Moodle India {@link https://moodle.com/in/}
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     assignsubmission_ltisubmissions
+ * @copyright   2023 Moodle India {@link https://moodle.com/in/}
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class linkmemberships extends \ltiservice_memberships\local\resources\linkmemberships {
     /**
@@ -71,8 +71,8 @@ class linkmemberships extends \ltiservice_memberships\local\resources\linkmember
             ['plugin' => 'ltisubmissions', 'name' => 'typeid', 'subtype' => 'assignsubmission', 'assignment' => $linkid]);
         $lti->servicesalt = $DB->get_field('assign_plugin_config', 'value',
             ['plugin' => 'ltisubmissions', 'name' => 'servicesalt',
-            'subtype' => 'assignsubmission', 'assignment' => $lti->id,
-        ]);
+                'subtype' => 'assignsubmission', 'assignment' => $lti->id,
+            ]);
         if (!($lti)) {
             $response->set_code(404);
             return;
@@ -97,7 +97,7 @@ class linkmemberships extends \ltiservice_memberships\local\resources\linkmember
             $info = null;
         }
         $json = $this->get_service()->get_members_json($this, $context, $course, $role,
-                                                       $limitfrom, $limitnum, $lti, $info, $response);
+            $limitfrom, $limitnum, $lti, $info, $response);
 
         $response->set_content_type($this->formats[0]);
         $response->set_body($json);

@@ -17,11 +17,10 @@
 /**
  * This file contains a class definition for the Context Memberships resource
  *
- * @package    assignsubmission_ltisubmissions
- * @copyright 2023 Moodle India {@link https://moodle.com/in/}
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     assignsubmission_ltisubmissions
+ * @copyright   2023 Moodle India {@link https://moodle.com/in/}
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 
 namespace assignsubmission_ltisubmissions\service\memberships\local\resources;
 use mod_lti\local\ltiservice\resource_base;
@@ -31,9 +30,9 @@ use core_availability\info_module;
 /**
  * A resource extending Context Memberships.
  *
- * @package    assignsubmission_ltisubmissions
- * @copyright 2023 Moodle India {@link https://moodle.com/in/}
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     assignsubmission_ltisubmissions
+ * @copyright   2023 Moodle India {@link https://moodle.com/in/}
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class contextmemberships extends \ltiservice_memberships\local\resources\contextmemberships {
     /**
@@ -80,8 +79,8 @@ class contextmemberships extends \ltiservice_memberships\local\resources\context
                     ['plugin' => 'ltisubmissions', 'name' => 'typeid', 'subtype' => 'assignsubmission', 'assignment' => $linkid]);
                 $lti->servicesalt = $DB->get_field('assign_plugin_config', 'value',
                     ['plugin' => 'ltisubmissions', 'name' => 'servicesalt',
-                    'subtype' => 'assignsubmission', 'assignment' => $lti->id,
-                ]);
+                        'subtype' => 'assignsubmission', 'assignment' => $lti->id,
+                    ]);
                 if (!($lti)) {
                     throw new \Exception("Not Found: LTI link {$linkid} doesn't exist", 404);
                 }
