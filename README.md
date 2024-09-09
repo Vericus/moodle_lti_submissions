@@ -2,6 +2,13 @@
 
 Moodle assignment plugin that uses LTI AGS to accept submission PDFs from an external LTI 1.3 tool like Cadmus.
 
+# Versions and branches
+
+| Moodle Version   | Branch            |
+|------------------|-------------------|
+| Moodle 4.1 - 4.2 | main              |
+| Moodle 4.3 - 4.4 | MOODLE_403_STABLE |
+
 
 ## Documentation
 
