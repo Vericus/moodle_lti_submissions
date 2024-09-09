@@ -61,10 +61,12 @@ function assignsubmission_ltisubmissions_urls(&$urls) {
  *
  * @return string
  */
-function assignsubmission_ltisubmissions_initiate_login($courseid, $cmid, $instance, $config, $messagetype = 'basic-lti-launch-request',
-    $title = '', $text = '', $foruserid = 0) {
+function assignsubmission_ltisubmissions_initiate_login($courseid, $cmid, $instance, $config,
+    $messagetype = 'basic-lti-launch-request', $title = '', $text = '', $foruserid = 0) {
 
-    $params = assignsubmission_ltisubmissions_build_login_request($courseid, $cmid, $instance, $config, $messagetype, $foruserid, $title, $text);
+    $params = assignsubmission_ltisubmissions_build_login_request($courseid, $cmid, $instance, $config,
+        $messagetype, $foruserid, $title, $text);
+
     $r = "<form action=\"" . $config->lti_initiatelogin .
         "\" name=\"ltiInitiateLoginForm\" id=\"ltiInitiateLoginForm\" method=\"post\" " .
         "encType=\"application/x-www-form-urlencoded\">\n";
@@ -99,7 +101,8 @@ function assignsubmission_ltisubmissions_initiate_login($courseid, $cmid, $insta
  *
  * @return array Login request parameters
  */
-function assignsubmission_ltisubmissions_build_login_request($courseid, $cmid, $instance, $config, $messagetype, $foruserid = 0, $title = '', $text = '') {
+function assignsubmission_ltisubmissions_build_login_request($courseid, $cmid, $instance, $config,
+    $messagetype, $foruserid = 0, $title = '', $text = '') {
     global $CFG, $SESSION;
     $ltihint = [];
     if (!empty($instance)) {
@@ -167,7 +170,8 @@ function assignsubmission_ltisubmissions_launch_tool($psuedolti, $foruserid) {
  * @return array the endpoint URL and parameters (including the signature)
  * @since  Moodle 3.0
  */
-function assignsubmission_ltisubmissions_get_launch_data($instance, $nonce = '', $messagetype = 'basic-lti-launch-request', $foruserid = 0) {
+function assignsubmission_ltisubmissions_get_launch_data($instance, $nonce = '',
+    $messagetype = 'basic-lti-launch-request', $foruserid = 0) {
     global $PAGE, $USER;
     $messagetype = $messagetype ? $messagetype : 'basic-lti-launch-request';
     $tool = lti_get_instance_type($instance);
@@ -227,7 +231,8 @@ function assignsubmission_ltisubmissions_get_launch_data($instance, $nonce = '',
 
     $course = $PAGE->course;
     $islti2 = isset($tool->toolproxyid);
-    $allparams = assignsubmission_ltisubmissions_build_request($instance, $typeconfig, $course, $typeid, $islti2, $messagetype, $foruserid);
+    $allparams = assignsubmission_ltisubmissions_build_request($instance, $typeconfig, $course, $typeid, $islti2,
+        $messagetype, $foruserid);
     if ($islti2) {
         $requestparams = lti_build_request_lti2($tool, $allparams);
     } else {
@@ -277,8 +282,8 @@ function assignsubmission_ltisubmissions_get_launch_data($instance, $nonce = '',
             $serviceparameters = $service->get_launch_parameters('basic-lti-launch-request',
                 $course->id, $USER->id, $typeid, $instance->id);
             foreach ($serviceparameters as $paramkey => $paramvalue) {
-                $requestparams['custom_' . $paramkey] = assignsubmission_ltisubmissions_parse_custom_parameter($toolproxy, $tool, $requestparams,
-                    $paramvalue, $islti2);
+                $requestparams['custom_' . $paramkey] = assignsubmission_ltisubmissions_parse_custom_parameter($toolproxy,
+                    $tool, $requestparams, $paramvalue, $islti2);
             }
         }
     }

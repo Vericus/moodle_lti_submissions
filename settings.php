@@ -24,7 +24,8 @@
 defined('MOODLE_INTERNAL') || die();
 global $DB;
 
-$settings = new admin_settingpage('assignsubmission_ltisubmissions', new lang_string('pluginname', 'assignsubmission_ltisubmissions'));
+$settings = new admin_settingpage('assignsubmission_ltisubmissions',
+    new lang_string('pluginname', 'assignsubmission_ltisubmissions'));
 
 $settings->add(new admin_setting_configcheckbox('assignsubmission_ltisubmissions/default',
     new lang_string('default', 'assignsubmission_ltisubmissions'),

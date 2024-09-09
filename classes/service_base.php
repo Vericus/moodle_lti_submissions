@@ -53,7 +53,7 @@ abstract class service_base {
     protected $id;
     /** @var string Human readable name for the service. */
     protected $name;
-    /** @var boolean <code>true</code> if requests for this service do not need to be signed. */
+    /** @var bool <code>true</code> if requests for this service do not need to be signed. */
     protected $unsigned;
     /** @var stdClass Tool proxy object for the current service request. */
     private $toolproxy;
