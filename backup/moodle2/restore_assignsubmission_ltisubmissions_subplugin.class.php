@@ -64,7 +64,7 @@ class restore_assignsubmission_ltisubmissions_subplugin extends restore_subplugi
         // The mapping is set in the restore for the core assign activity.
         // When a submission node is processed.
         $data->submission = $this->get_mappingid('submission', $data->submission);
-        $DB->insert_record('assignsubmission_ltisub', $data);
+        $DB->insert_record('assignsubmission_ltisubmissions', $data);
 
         $this->add_related_files('assignsubmission_ltisubmissions',
             'ltisubmission_draft_files',

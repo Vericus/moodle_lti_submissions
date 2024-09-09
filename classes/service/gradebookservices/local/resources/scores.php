@@ -217,7 +217,7 @@ class scores extends \ltiservice_gradebookservices\local\resources\scores {
         $loginfo->scoreinfo = json_encode($score);
         $loginfo->userid = $userid;
         $loginfo->timecreated = time();
-        $DB->insert_record('assignsubmission_lti_log', $loginfo);
+        $DB->insert_record('assignsubmission_ltisubmissions_log', $loginfo);
     }
     /**
      * Parse a value for custom parameter substitution variables.

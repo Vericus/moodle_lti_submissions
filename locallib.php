@@ -200,15 +200,15 @@ class assign_submission_ltisubmissions extends \assign_submission_plugin {
     public function save(stdClass $submission, stdClass $data) {
         global $DB, $CFG;
         require_once($CFG->libdir . '/filelib.php');
-        $ltiassignsubid = $DB->get_field('assignsubmission_ltisub', 'id',
+        $ltiassignsubid = $DB->get_field('assignsubmission_ltisubmissions', 'id',
             ['submission' => $submission->id]);
         $ltisubmissionobj = new \stdClass();
         $ltisubmissionobj->submission = $submission->id;
         if ($ltiassignsubid) {
             $ltisubmissionobj->id = $ltiassignsubid;
-            $DB->update_record('assignsubmission_ltisub', $ltisubmissionobj);
+            $DB->update_record('assignsubmission_ltisubmissions', $ltisubmissionobj);
         } else {
-            $DB->insert_record('assignsubmission_ltisub', $ltisubmissionobj);
+            $DB->insert_record('assignsubmission_ltisubmissions', $ltisubmissionobj);
         }
         $submissioninfo = $data->{'https://api.cadmus.io/lti/submission'};
         $fs = get_file_storage();
