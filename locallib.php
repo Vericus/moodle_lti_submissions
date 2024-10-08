@@ -47,7 +47,7 @@ class assign_submission_ltisubmissions extends \assign_submission_plugin {
     public function get_name() {
         return get_string('ltisubmissions', 'assignsubmission_ltisubmissions');
     }
-    
+
     /**
      * Get the default setting for file submission plugin
      *
@@ -181,7 +181,8 @@ class assign_submission_ltisubmissions extends \assign_submission_plugin {
         if ($config->lti_ltiversion === LTI_VERSION_1P3) {
             if (!isset($SESSION->lti_initiatelogin_status)) {
                 $msgtype = 'basic-lti-launch-request';
-                echo assignsubmission_ltisubmissions_initiate_login($cm->course, $cm->id, $psuedolti, $config, $msgtype, '', '', $data->userid);
+                echo assignsubmission_ltisubmissions_initiate_login($cm->course, $cm->id, $psuedolti, $config,
+                    $msgtype, '', '', $data->userid);
                 die();
             } else {
                 unset($SESSION->lti_initiatelogin_status);
@@ -200,15 +201,15 @@ class assign_submission_ltisubmissions extends \assign_submission_plugin {
     public function save(stdClass $submission, stdClass $data) {
         global $DB, $CFG;
         require_once($CFG->libdir . '/filelib.php');
-        $ltiassignsubid = $DB->get_field('assignsubmission_ltisub', 'id',
+        $ltiassignsubid = $DB->get_field('assignsubmission_ltisubmissions', 'id',
             ['submission' => $submission->id]);
         $ltisubmissionobj = new \stdClass();
         $ltisubmissionobj->submission = $submission->id;
         if ($ltiassignsubid) {
             $ltisubmissionobj->id = $ltiassignsubid;
-            $DB->update_record('assignsubmission_ltisub', $ltisubmissionobj);
+            $DB->update_record('assignsubmission_ltisubmissions', $ltisubmissionobj);
         } else {
-            $DB->insert_record('assignsubmission_ltisub', $ltisubmissionobj);
+            $DB->insert_record('assignsubmission_ltisubmissions', $ltisubmissionobj);
         }
         $submissioninfo = $data->{'https://api.cadmus.io/lti/submission'};
         $fs = get_file_storage();

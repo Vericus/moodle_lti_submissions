@@ -54,7 +54,7 @@ class provider implements
             'iteminfo' => 'privacy:metadata:textpurpose',
             'scoreinfo' => 'privacy:metadata:textpurpose',
         ];
-        $collection->add_database_table('assignsubmission_lti_log', $detail, 'privacy:metadata:tablepurpose');
+        $collection->add_database_table('assignsubmission_ltisubmissions_log', $detail, 'privacy:metadata:tablepurpose');
         $collection->link_subsystem('core_files', 'privacy:metadata:filepurpose');
         return $collection;
     }
@@ -114,12 +114,12 @@ class provider implements
         $params['assignid'] = $requestdata->get_assign()->get_instance()->id;
         $submissionids = $DB->get_fieldset_select('assign_submission', 'id', ' assignment = :assignid ', $params);
         list($ltisubmissionsql, $ltisubmissionparams) = $DB->get_in_or_equal($submissionids, SQL_PARAMS_NAMED, 'ltisubid', true);
-        $DB->delete_records_select('assignsubmission_ltisub', " submission $ltisubmissionsql", $ltisubmissionparams);
+        $DB->delete_records_select('assignsubmission_ltisubmissions', " submission $ltisubmissionsql", $ltisubmissionparams);
         $itemids = $DB->get_fieldset_sql("SELECT gi.id FROM {grade_items} gi
             WHERE gi.iteminstance = :assignment AND gi.itemmodule like 'assign' ",
             ['assignment' => $requestdata->get_assign()->get_instance()->id]);
         list($ltiitemidsql, $ltiitemidparams) = $DB->get_in_or_equal($itemids, SQL_PARAMS_NAMED, 'ltisubid', true);
-        $DB->delete_records_select('assignsubmission_lti_log', " itemid $ltiitemidsql", $ltiitemidparams);
+        $DB->delete_records_select('assignsubmission_ltisubmissions_log', " itemid $ltiitemidsql", $ltiitemidparams);
     }
 
     /**
@@ -146,13 +146,13 @@ class provider implements
             ASSIGNSUBMISSION_LTISUBMISSIONS_FINAL_FILEAREA,
             $submissionid);
 
-        $DB->delete_records('assignsubmission_ltisub', ['submission' => $submissionid]);
+        $DB->delete_records('assignsubmission_ltisubmissions', ['submission' => $submissionid]);
         $itemids = $DB->get_fieldset_sql("SELECT gi.id FROM {grade_items} gi
             JOIN {assign_submission} asub ON asub.assignment = gi.iteminstance
             WHERE asub.id = :submissionid AND gi.itemmodule like 'assign' ",
             ['submissionid' => $submissionid]);
         list($ltiitemidsql, $ltiitemidparams) = $DB->get_in_or_equal($itemids, SQL_PARAMS_NAMED, 'ltisubid', true);
-        $DB->delete_records_select('assignsubmission_lti_log', " itemid $ltiitemidsql", $ltiitemidparams);
+        $DB->delete_records_select('assignsubmission_ltisubmissions_log', " itemid $ltiitemidsql", $ltiitemidparams);
     }
 
     /**
@@ -219,11 +219,11 @@ class provider implements
         $params['assignid'] = $deletedata->get_assignid();
         list($ltisubmissionsql, $ltisubmissionparams) =
             $DB->get_in_or_equal($deletedata->get_submissionids(), SQL_PARAMS_NAMED, 'ltisubid', true);
-        $DB->delete_records_select('assignsubmission_ltisub', " submission $ltisubmissionsql", $ltisubmissionparams);
+        $DB->delete_records_select('assignsubmission_ltisubmissions', " submission $ltisubmissionsql", $ltisubmissionparams);
         $itemids = $DB->get_fieldset_sql("SELECT gi.id FROM {grade_items} gi
             WHERE gi.iteminstance = :assignid AND gi.itemmodule like 'assign' ", $params);
         list($ltiitemidsql, $ltiitemidparams) = $DB->get_in_or_equal($itemids, SQL_PARAMS_NAMED, 'ltisubid', true);
-        $DB->delete_records_select('assignsubmission_lti_log', " itemid $ltiitemidsql",
+        $DB->delete_records_select('assignsubmission_ltisubmissions_log', " itemid $ltiitemidsql",
             $ltiitemidparams);
     }
 }

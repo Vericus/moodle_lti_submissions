@@ -251,14 +251,14 @@ class provider_test extends \mod_assign\privacy\provider_test {
         $submissionids = $DB->get_fieldset_select('assign_submission', 'id',
             ' assignment = :assignid ', ['assignid' => $assign1->get_instance()->id]);
         [$ltisubmissionsql, $ltisubmissionparams] = $DB->get_in_or_equal($submissionids, SQL_PARAMS_NAMED, 'ltisubid', true);
-        $data = $DB->get_records_select('assignsubmission_ltisub', " submission $ltisubmissionsql", $ltisubmissionparams);
+        $data = $DB->get_records_select('assignsubmission_ltisubmissions', " submission $ltisubmissionsql", $ltisubmissionparams);
         $this->assertCount(3, $data);
 
         // Records in the second assignment (not being touched).
         $submissionids = $DB->get_fieldset_select('assign_submission', 'id',
             ' assignment = :assignid ', ['assignid' => $assign2->get_instance()->id]);
         [$ltisubmissionsql, $ltisubmissionparams] = $DB->get_in_or_equal($submissionids, SQL_PARAMS_NAMED, 'ltisubid', true);
-        $data = $DB->get_records_select('assignsubmission_ltisub', " submission $ltisubmissionsql", $ltisubmissionparams);
+        $data = $DB->get_records_select('assignsubmission_ltisubmissions', " submission $ltisubmissionsql", $ltisubmissionparams);
         $this->assertCount(2, $data);
 
         $deletedata = new \mod_assign\privacy\assign_plugin_request_data($context1, $assign1);
@@ -272,14 +272,14 @@ class provider_test extends \mod_assign\privacy\provider_test {
         $submissionids = $DB->get_fieldset_select('assign_submission', 'id',
             ' assignment = :assignid ', ['assignid' => $assign1->get_instance()->id]);
         [$ltisubmissionsql, $ltisubmissionparams] = $DB->get_in_or_equal($submissionids, SQL_PARAMS_NAMED, 'ltisubid', true);
-        $data = $DB->get_records_select('assignsubmission_ltisub', " submission $ltisubmissionsql", $ltisubmissionparams);
+        $data = $DB->get_records_select('assignsubmission_ltisubmissions', " submission $ltisubmissionsql", $ltisubmissionparams);
         $this->assertCount(1, $data);
 
         // This should be untouched.
         $submissionids = $DB->get_fieldset_select('assign_submission', 'id',
             ' assignment = :assignid ', ['assignid' => $assign2->get_instance()->id]);
         [$ltisubmissionsql, $ltisubmissionparams] = $DB->get_in_or_equal($submissionids, SQL_PARAMS_NAMED, 'ltisubid', true);
-        $data = $DB->get_records_select('assignsubmission_ltisub', " submission $ltisubmissionsql", $ltisubmissionparams);
+        $data = $DB->get_records_select('assignsubmission_ltisubmissions', " submission $ltisubmissionsql", $ltisubmissionparams);
         $this->assertCount(2, $data);
     }
 }

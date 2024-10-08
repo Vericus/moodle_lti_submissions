@@ -49,7 +49,7 @@ class backup_assignsubmission_ltisubmissions_subplugin extends backup_subplugin 
         $subpluginwrapper->add_child($subpluginelement);
 
         // Set source to populate the data.
-        $subpluginelement->set_source_table('assignsubmission_ltisub',
+        $subpluginelement->set_source_table('assignsubmission_ltisubmissions',
             ['submission' => backup::VAR_PARENTID]);
 
         // The parent is the submission.
