@@ -17,13 +17,13 @@
 namespace assignsubmission_ltisubmissions\privacy;
 
 /**
- * Unit tests for mod/assign/submission/ltisubmissions/classes/privacy/
+ * Unit tests for mod/assign/submission/ltisubmissions/classes/privacy/provider.
  * @package assignsubmission_ltisubmissions
  * @copyright 2023 Moodle India {@link https://moodle.com/in/}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers \assignsubmission_ltisubmissions\privacy\provider
  */
-final class provider_test extends \mod_assign\tests\provider_testcase\provider_test {
+final class provider_test extends \mod_assign\tests\provider_testcase {
 
     /**
      * Convenience function for creating feedback data.
