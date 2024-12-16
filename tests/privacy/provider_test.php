@@ -14,27 +14,16 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Unit tests for assignsubmission_ltisubmissions.
- *
- * @package   assignsubmission_ltisubmissions
- * @copyright 2023 Moodle India {@link https://moodle.com/in/}
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
 namespace assignsubmission_ltisubmissions\privacy;
-
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-require_once($CFG->dirroot . '/mod/assign/tests/privacy/provider_test.php');
 
 /**
  * Unit tests for mod/assign/submission/ltisubmissions/classes/privacy/
- *
+ * @package assignsubmission_ltisubmissions
  * @copyright 2023 Moodle India {@link https://moodle.com/in/}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @covers \assignsubmission_ltisubmissions\privacy\provider
  */
-class provider_test extends \mod_assign\privacy\provider_test {
+final class provider_test extends \mod_assign\tests\provider_testcase\provider_test {
 
     /**
      * Convenience function for creating feedback data.
