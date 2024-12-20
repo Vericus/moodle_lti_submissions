@@ -38,7 +38,7 @@ require_once($CFG->dirroot . '/mod/assign/tests/generator.php');
  * @copyright   2023 Moodle India {@link https://moodle.com/in/}
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class events_test extends \advanced_testcase {
+final class events_test extends \advanced_testcase {
 
     // Use the generator helper.
     use mod_assign_test_generator;
@@ -47,14 +47,14 @@ class events_test extends \advanced_testcase {
      * Test that the assessable_uploaded event is fired when a draft file submission has been made.
      * @covers \assignsubmission_ltisubmissions\event\assessable_uploaded
      */
-    public function test_draft_assessable_uploaded() {
+    public function test_draft_assessable_uploaded(): void {
         $this->verify_submission('draft', 'Test Draft submission');
     }
     /**
      * Test that the assessable_uploaded event is fired when a final file submission has been made.
      * @covers \assignsubmission_ltisubmissions\event\assessable_uploaded
      */
-    public function test_final_assessable_uploaded() {
+    public function test_final_assessable_uploaded(): void {
         $this->verify_submission('final', 'Test Final submission');
     }
     /**
