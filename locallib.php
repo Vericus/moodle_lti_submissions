@@ -58,7 +58,6 @@ class assign_submission_ltisubmissions extends \assign_submission_plugin {
         global $CFG, $COURSE, $PAGE, $OUTPUT, $DB;
         require_once($CFG->dirroot . '/mod/lti/locallib.php');
 
-        $this->typeid = 0;
         $hideoptions = 0;
         if ($this->assignment->has_instance()) {
             $typeidsubmissions = $this->get_config('typeid');
