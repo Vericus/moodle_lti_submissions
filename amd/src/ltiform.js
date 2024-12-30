@@ -88,8 +88,7 @@ export const init = (hideoptions) => {
                 $('#id_maxattempts').removeClass('is-invalid');
                 $('#id_error_maxattempts').html('');
             }
-            if (typeof (data.attemptreopenmethod) !== 'undefined' &&
-            ['automatic', 'untilpass'].indexOf(data.attemptreopenmethod) === -1) {
+            if (typeof (data.attemptreopenmethod) !== 'undefined' && data.attemptreopenmethod === 'manual') {
                 $('#id_attemptreopenmethod').addClass('is-invalid');
                 getString('attemptreopenmethoderror', 'assignsubmission_ltisubmissions').then(function (error) {
                     $('#id_error_attemptreopenmethod').html(error);
