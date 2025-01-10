@@ -136,10 +136,6 @@ class assign_submission_ltisubmissions extends \assign_submission_plugin {
         global $DB;
         $fields = ['typeid', 'draft_maxfiles', 'final_maxfiles', 'servicesalt'];
         $authuserroleid = $DB->get_field('role', 'id', ['archetype' => 'user']);
-        assign_capability('mod/assign:editothersubmission', CAP_PROHIBIT,
-            $authuserroleid, $this->assignment->get_context()->id, true);
-        assign_capability('mod/assign:submit', CAP_ALLOW,
-            $authuserroleid, $this->assignment->get_context()->id, true);
 
         $data->servicesalt = uniqid('', true);
         foreach ($fields as $field) {

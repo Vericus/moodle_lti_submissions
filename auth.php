@@ -84,11 +84,8 @@ if ($ok) {
 $cm = get_coursemodule_from_id('assign', $id, 0, false, MUST_EXIST);
 $context = context_module::instance($cm->id);
 if ($ok && ($loginhint !== $USER->id)) {
-    if (!(has_capability('mod/assign:editothersubmission', $context, $USER->id) &&
-        has_capability('mod/assign:submit', $context, $loginhint))) {
-        $ok = false;
-        $error = 'access_denied';
-    }
+    $ok = false;
+    $error = 'access_denied';
 }
 
 // If we're unable to load up config; we cannot trust the redirect uri for POSTing to.
