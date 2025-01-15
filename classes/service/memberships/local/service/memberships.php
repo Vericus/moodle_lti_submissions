@@ -24,6 +24,10 @@
 
 namespace assignsubmission_ltisubmissions\service\memberships\local\service;
 
+defined('MOODLE_INTERNAL') || die();
+
+require_once($CFG->dirroot . '/mod/assign/submission/ltisubmissions/lib.php');
+
 /**
  * A service extending Memberships.
  *
@@ -39,7 +43,7 @@ class memberships extends \assignsubmission_ltisubmissions\service_base {
     /** Context-level role for Learner */
     const CONTEXT_ROLE_LEARNER = 'http://purl.imsglobal.org/vocab/lis/v2/membership#Learner';
     /** Capability used to identify Instructors */
-    const INSTRUCTOR_CAPABILITY = 'moodle/course:manageactivities';
+    const INSTRUCTOR_CAPABILITY = 'mod/lti:manage';
     /** Always include field */
     const ALWAYS_INCLUDE_FIELD = 1;
     /** Allow the instructor to decide if included */
@@ -73,7 +77,6 @@ class memberships extends \assignsubmission_ltisubmissions\service_base {
             $this->resources[] = new \assignsubmission_ltisubmissions\service\memberships\local\resources\contextmemberships($this);
             $this->resources[] = new \assignsubmission_ltisubmissions\service\memberships\local\resources\linkmemberships($this);
         }
-
         return $this->resources;
 
     }
@@ -246,7 +249,7 @@ class memberships extends \assignsubmission_ltisubmissions\service_base {
             $member->{"@type"} = 'LISPerson';
             $membership = new \stdClass();
             $membership->status = 'Active';
-            $membership->role = explode(',', lti_get_ims_role($user->id, null, $contextid, true));
+            $membership->role = explode(',', assignsubmission_ltisubmissions_get_ims_role($user->id, null, $contextid, true));
 
             $instanceconfig = null;
             if (!is_null($lti)) {
@@ -402,7 +405,7 @@ class memberships extends \assignsubmission_ltisubmissions\service_base {
 
             $member = new \stdClass();
             $member->status = 'Active';
-            $member->roles = explode(',', lti_get_ims_role($user->id, null, $course->id, true));
+            $member->roles = explode(',', assignsubmission_ltisubmissions_get_ims_role($user->id, null, $course->id, true));
 
             $instanceconfig = null;
             if (!is_null($lti)) {
