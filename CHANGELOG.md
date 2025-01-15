@@ -1,5 +1,14 @@
 # LTI Submissions Plugin
 
+## 2025-01-15
+
+- Remove unnecessary mod/assign:submit overrides which cause teacher listed as submissions participants.
+- Allow automatic anonymous submissions.
+- Update error message for grant attempts.
+- Remove deprecated typeid.
+- Tests has been updated as per the issue [[MOODLE-81520](https://tracker.moodle.org/browse/MDL-81520)](https://tracker.moodle.org/browse/MDL-81520)
+- Minor code-checker fixes for errors/warnings raised.
+
 ## 2024-09-04
 
 Updated with upstream changes contributed by [Catalyst](https://www.catalyst-au.net/solutions/moodle) following a code review.
@@ -16,7 +25,7 @@ Updated with upstream changes contributed by [Catalyst](https://www.catalyst-au.
 
 ## 2024-01-15
 
-- Add LTI tool whitelist to global configuration. 
+- Add LTI tool whitelist to global configuration.
 
 - Show only whitelisted LTI tools when Activity's submission type is "LTI Submissions"
 
@@ -24,8 +33,6 @@ Updated with upstream changes contributed by [Catalyst](https://www.catalyst-au.
 
 - Fix cancelling out not working if fresh Activity settings had "LTI Submissions" selected
 
-
 #### Patch Changes
 
 - Remove display of LTI configuration details. These were showing up on all LTI tools. They are well-known and don't need this display.
-
