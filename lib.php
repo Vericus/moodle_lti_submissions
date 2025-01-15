@@ -519,7 +519,7 @@ function assignsubmission_ltisubmissions_get_ims_role($user, $cmid, $courseid, $
         // a real LTI instance.
         $context = context_course::instance($courseid);
 
-        if (has_capability('moodle/course:manageactivities', $context, $user)) {
+        if (has_capability('mod/lti:manage', $context, $user)) {
             array_push($roles, 'Instructor');
         } else {
             array_push($roles, 'Learner');
