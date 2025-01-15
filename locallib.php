@@ -47,7 +47,7 @@ class assign_submission_ltisubmissions extends \assign_submission_plugin {
     public function get_name() {
         return get_string('ltisubmissions', 'assignsubmission_ltisubmissions');
     }
-    
+
     /**
      * Get the default setting for file submission plugin
      *
@@ -58,7 +58,6 @@ class assign_submission_ltisubmissions extends \assign_submission_plugin {
         global $CFG, $COURSE, $PAGE, $OUTPUT, $DB;
         require_once($CFG->dirroot . '/mod/lti/locallib.php');
 
-        $this->typeid = 0;
         $hideoptions = 0;
         if ($this->assignment->has_instance()) {
             $typeidsubmissions = $this->get_config('typeid');
@@ -137,10 +136,6 @@ class assign_submission_ltisubmissions extends \assign_submission_plugin {
         global $DB;
         $fields = ['typeid', 'draft_maxfiles', 'final_maxfiles', 'servicesalt'];
         $authuserroleid = $DB->get_field('role', 'id', ['archetype' => 'user']);
-        assign_capability('mod/assign:editothersubmission', CAP_PROHIBIT,
-            $authuserroleid, $this->assignment->get_context()->id, true);
-        assign_capability('mod/assign:submit', CAP_ALLOW,
-            $authuserroleid, $this->assignment->get_context()->id, true);
 
         $data->servicesalt = uniqid('', true);
         foreach ($fields as $field) {
