@@ -22,7 +22,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['attemptreopenmethoderror'] = 'Additional attempts must be set to Automatically until pass in case of LTI Submissions';
+$string['attemptreopenmethoderror'] = 'Additional attempts must not be set to manual for LTI Submissions';
 $string['default'] = 'Enabled by default';
 $string['default_help'] = 'If set, this submission method will be enabled by default for all new assignments.';
 $string['defaulttypeids'] = 'Allowed LTI Types';
