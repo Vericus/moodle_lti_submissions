@@ -1,5 +1,9 @@
 # LTI Submissions Plugin
 
+## 2025-02-19
+
+- Re added mod/assign:submit permission overrides as it turns out that it is required. This means that teachers will be listed as submissions participants
+
 ## 2025-01-10
 
 - Remove unnecessary mod/assign:submit overrides which cause teacher listed as submissions participants
