@@ -88,10 +88,6 @@ export const init = (hideoptions) => {
                 $('#id_maxattempts').removeClass('is-invalid');
                 $('#id_error_maxattempts').html('');
             }
-            if ($('#id_attemptreopenmethod').hasClass('is-invalid')) {
-                $('#id_attemptreopenmethod').removeClass('is-invalid');
-                $('#id_error_attemptreopenmethod').html('');
-            }
             if (typeof (data.requiresubmissionstatement) !== 'undefined' && data.requiresubmissionstatement != 0) {
                 $('#id_requiresubmissionstatement').addClass('is-invalid');
                 getString('requiresubmissionstatementerror', 'assignsubmission_ltisubmissions').then(function (error) {
