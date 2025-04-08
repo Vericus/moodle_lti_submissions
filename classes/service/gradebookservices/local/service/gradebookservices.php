@@ -326,6 +326,15 @@ class gradebookservices extends service_base {
             if (isset($ltiassignment->maxattempts)) {
                 $launchparameters['max_attempts'] = $ltiassignment->maxattempts;
             }
+
+            // Extension due date
+            $extensionduedate = $DB->get_field_sql("
+                    SELECT auf.extensionduedate
+                    FROM {user} u
+                    LEFT JOIN {assign_user_flags} auf ON auf.userid = u.id AND auf.assignment = ?
+                    WHERE u.id = ? LIMIT 1
+                    ", [$modassign, $userid]);
+            $launchparameters['extension_due_date_at_unix'] = $extensionduedate;
         }
         return $launchparameters;
     }
