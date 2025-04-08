@@ -320,6 +320,12 @@ class gradebookservices extends service_base {
                 WHERE cm.instance = :assigninstance
                 LIMIT 1 ", ['assigninstance' => $modassign]);
             $launchparameters['moodle_grader_url'] = "$CFG->wwwroot/mod/assign/view.php?id={$cmid}&action=grader&userid={$userid}";
+            if (isset($ltiassignment->attemptreopenmethod)) {
+                $launchparameters['attempt_reopen_method'] = $ltiassignment->attemptreopenmethod;
+            }
+            if (isset($ltiassignment->maxattempts)) {
+                $launchparameters['max_attempts'] = $ltiassignment->maxattempts;
+            }
         }
         return $launchparameters;
     }
