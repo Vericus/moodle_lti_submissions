@@ -385,6 +385,29 @@ class memberships extends \assignsubmission_ltisubmissions\service_base {
         $islti2 = $tool->toolproxyid > 0;
         $n = 0;
         $more = false;
+        // Create a map of user ID to extension date
+        $extensiondates = [];
+
+        if (isset($lti)) {
+            // Get all extension dates for this assignment in one query
+            try {
+                $records = $DB->get_records_sql("
+                        SELECT userid, extensionduedate
+                        FROM {assign_user_flags}
+                        WHERE assignment = ?
+                        ", [$lti->id]);
+                foreach ($records as $record) {
+                    if (isset($record->extensionduedate) && $record->extensionduedate > 0) {
+                        $extensiondates[$record->userid] = $record->extensionduedate;
+                    }
+                }
+                error_log('Extension dates found: ' . count($extensiondates));
+            } catch (\Exception $e) {
+                error_log('Error retrieving extension dates: ' . $e->getMessage());
+            }
+        }
+
+
         foreach ($users as $user) {
             if (in_array($user->id, $exclude)) {
                 continue;
@@ -408,9 +431,9 @@ class memberships extends \assignsubmission_ltisubmissions\service_base {
             $member->roles = explode(',', assignsubmission_ltisubmissions_get_ims_role($user->id, null, $course->id, true));
 
             $instanceconfig = null;
-            if (!is_null($lti)) {
-                $instanceconfig = lti_get_type_config_from_instance($lti->id);
-            }
+            // if (!is_null($lti)) {
+            //     $instanceconfig = lti_get_type_config_from_instance($lti->id);
+            // }
             if (!$islti2) {
                 $isallowedlticonfig = self::is_allowed_field_set($toolconfig, $instanceconfig,
                     ['name' => 'sendname', 'givenname' => 'sendname',
@@ -426,6 +449,10 @@ class memberships extends \assignsubmission_ltisubmissions\service_base {
                 'User.id' => ['type' => 'id',
                     'member.field' => 'user_id',
                     'source.value' => $user->id,
+                ],
+                'User.extensionduedate' => ['type' => 'extension_due_date_at_unix',
+                    'member.field' => 'extension_due_date_at_unix',
+                    'source.value' => isset($extensiondates[$user->id]) ? $extensiondates[$user->id] : null,
                 ],
                 'Person.sourcedId' => ['type' => 'id',
                     'member.field' => 'lis_person_sourcedid',
@@ -481,8 +508,13 @@ class memberships extends \assignsubmission_ltisubmissions\service_base {
             }
 
             foreach ($includedcapabilities as $capability) {
-                if (($capability['type'] === 'id') || $isallowedlticonfig[$capability['type']]) {
-                    $member->{$capability['member.field']} = $capability['source.value'];
+                if (
+                    $capability["type"] === "id" ||
+                    $capability["type"] === "extension_due_date_at_unix" ||
+                    $isallowedlticonfig[$capability["type"]]
+                ) {
+                    $member->{$capability["member.field"]} =
+                        $capability["source.value"];
                 }
             }
 
