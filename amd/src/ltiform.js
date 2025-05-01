@@ -67,7 +67,7 @@ export const init = (hideoptions) => {
 
         // Check for attemptreopenmethod on page load
         if ($('#id_attemptreopenmethod').val() === 'manual') {
-            $('[data-form-controls="id_attemptreopenmethod"]').after(
+            $('.dropdown[data-form-controls="id_attemptreopenmethod"]').after(
                 '<div id="id_warning_attemptreopenmethod" class="form-text text-warning w-100">' +
                 'Submissions will be available after the due date in Moodle Grader</div>'
             );
@@ -78,7 +78,7 @@ export const init = (hideoptions) => {
             if ($(this).val() === 'manual') {
                 // Only add warning if it doesn't exist
                 if ($('#id_warning_attemptreopenmethod').length === 0) {
-                    $('[data-form-controls="id_attemptreopenmethod"]').after(
+                    $('.dropdown[data-form-controls="id_attemptreopenmethod"]').after(
                         '<div id="id_warning_attemptreopenmethod" class="form-text text-warning w-100">' +
                         'Submissions will be available after the due date in Moodle Grader</div>'
                     );
