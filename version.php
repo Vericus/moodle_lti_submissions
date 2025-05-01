@@ -22,9 +22,9 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined("MOODLE_INTERNAL") || die();
+defined('MOODLE_INTERNAL') || die();
 
-$plugin->version = 2025040800;
+$plugin->version = 2025050100;
 $plugin->requires = 2023100900;
 $plugin->component = "assignsubmission_ltisubmissions";
 $plugin->incompatible = 500;
