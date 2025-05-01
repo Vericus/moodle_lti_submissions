@@ -64,6 +64,30 @@ export const init = (hideoptions) => {
                 }
             });
         }
+
+        // Check for attemptreopenmethod on page load
+        if ($('#id_attemptreopenmethod').val() === 'manual') {
+            $('[data-form-controls="id_attemptreopenmethod"]').after(
+                '<div id="id_warning_attemptreopenmethod" class="form-text text-warning w-100">' +
+                'Submissions will be available after the due date in Moodle Grader</div>'
+            );
+        }
+
+        // Add change event listener for attemptreopenmethod dropdown
+        $('#id_attemptreopenmethod').on('change', function() {
+            if ($(this).val() === 'manual') {
+                // Only add warning if it doesn't exist
+                if ($('#id_warning_attemptreopenmethod').length === 0) {
+                    $('[data-form-controls="id_attemptreopenmethod"]').after(
+                        '<div id="id_warning_attemptreopenmethod" class="form-text text-warning w-100">' +
+                        'Submissions will be available after the due date in Moodle Grader</div>'
+                    );
+                }
+            } else {
+                // Remove warning if condition is not met
+                $('#id_warning_attemptreopenmethod').remove();
+            }
+        });
     });
     $(document).find("form[action='modedit.php']").on("submit", function (e) {
         if ($(e.originalEvent.submitter).data('skipValidation') == 1) {
