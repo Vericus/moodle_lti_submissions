@@ -320,6 +320,20 @@ class gradebookservices extends service_base {
                 WHERE cm.instance = :assigninstance
                 LIMIT 1 ", ['assigninstance' => $modassign]);
             $launchparameters['moodle_grader_url'] = "$CFG->wwwroot/mod/assign/view.php?id={$cmid}&action=grader&userid={$userid}";
+            if (isset($ltiassignment->attemptreopenmethod)) {
+                $launchparameters['moodle_attempt_reopen_method'] = $ltiassignment->attemptreopenmethod;
+            }
+            if (isset($ltiassignment->maxattempts)) {
+                $launchparameters['max_attempts'] = $ltiassignment->maxattempts;
+            }
+
+            $extensionduedate = $DB->get_field_sql("
+                    SELECT auf.extensionduedate
+                    FROM {user} u
+                    LEFT JOIN {assign_user_flags} auf ON auf.userid = u.id AND auf.assignment = ?
+                    WHERE u.id = ? LIMIT 1
+                    ", [$modassign, $userid]);
+            $launchparameters['extension_due_date_at_unix'] = $extensionduedate;
         }
         return $launchparameters;
     }

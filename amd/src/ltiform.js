@@ -64,6 +64,30 @@ export const init = (hideoptions) => {
                 }
             });
         }
+
+        // Check for attemptreopenmethod on page load
+        if ($('#id_attemptreopenmethod').val() === 'manual') {
+            $('.dropdown[data-form-controls="id_attemptreopenmethod"]').after(
+                '<div id="id_warning_attemptreopenmethod" class="form-text text-warning w-100">' +
+                'Submissions will be available after the due date in Moodle Grader</div>'
+            );
+        }
+
+        // Add change event listener for attemptreopenmethod dropdown
+        $('#id_attemptreopenmethod').on('change', function() {
+            if ($(this).val() === 'manual') {
+                // Only add warning if it doesn't exist
+                if ($('#id_warning_attemptreopenmethod').length === 0) {
+                    $('.dropdown[data-form-controls="id_attemptreopenmethod"]').after(
+                        '<div id="id_warning_attemptreopenmethod" class="form-text text-warning w-100">' +
+                        'Submissions will be available after the due date in Moodle Grader</div>'
+                    );
+                }
+            } else {
+                // Remove warning if condition is not met
+                $('#id_warning_attemptreopenmethod').remove();
+            }
+        });
     });
     $(document).find("form[action='modedit.php']").on("submit", function (e) {
         if ($(e.originalEvent.submitter).data('skipValidation') == 1) {
@@ -87,17 +111,6 @@ export const init = (hideoptions) => {
             } else if ($('#id_maxattempts').hasClass('is-invalid')) {
                 $('#id_maxattempts').removeClass('is-invalid');
                 $('#id_error_maxattempts').html('');
-            }
-            if (typeof (data.attemptreopenmethod) !== 'undefined' && data.attemptreopenmethod === 'manual') {
-                $('#id_attemptreopenmethod').addClass('is-invalid');
-                getString('attemptreopenmethoderror', 'assignsubmission_ltisubmissions').then(function (error) {
-                    $('#id_error_attemptreopenmethod').html(error);
-                }.bind(this));
-                scrollindex = 'id_attemptreopenmethod';
-                expandheader = true;
-            } else if ($('#id_attemptreopenmethod').hasClass('is-invalid')) {
-                $('#id_attemptreopenmethod').removeClass('is-invalid');
-                $('#id_error_attemptreopenmethod').html('');
             }
             if (typeof (data.requiresubmissionstatement) !== 'undefined' && data.requiresubmissionstatement != 0) {
                 $('#id_requiresubmissionstatement').addClass('is-invalid');
