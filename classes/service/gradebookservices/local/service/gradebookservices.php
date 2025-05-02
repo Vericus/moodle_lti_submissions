@@ -327,7 +327,6 @@ class gradebookservices extends service_base {
                 $launchparameters['max_attempts'] = $ltiassignment->maxattempts;
             }
 
-            // Extension due date
             $extensionduedate = $DB->get_field_sql("
                     SELECT auf.extensionduedate
                     FROM {user} u
