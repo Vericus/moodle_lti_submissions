@@ -1,5 +1,8 @@
 # LTI Submissions Plugin
 
+## 2025-05-02
+- Allows option to set manual grant attempts in asessment settings. If selected, then submissions will be available after the due date in Moodle Grader
+
 ## 2025-02-19
 
 - Re added mod/assign:submit permission overrides as it turns out that it is required. This means that teachers will be listed as submissions participants
