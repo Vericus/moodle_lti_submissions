@@ -385,8 +385,9 @@ class memberships extends \assignsubmission_ltisubmissions\service_base {
         $islti2 = $tool->toolproxyid > 0;
         $n = 0;
         $more = false;
-        // Create a map of user ID to extension date
+        // Create a map of user ID to extension date and override dates
         $extensiondates = [];
+        $overridedates = [];
 
         if (isset($lti)) {
             // Get all extension dates for this assignment in one query
@@ -404,6 +405,32 @@ class memberships extends \assignsubmission_ltisubmissions\service_base {
                 error_log('Extension dates found: ' . count($extensiondates));
             } catch (\Exception $e) {
                 error_log('Error retrieving extension dates: ' . $e->getMessage());
+            }
+
+            // Get all override dates for this assignment in one query
+            try {
+                $records = $DB->get_records_sql("
+                        SELECT userid, duedate, allowsubmissionsfromdate, cutoffdate
+                        FROM {assign_overrides}
+                        WHERE assignid = ?
+                        ", [$lti->id]);
+                foreach ($records as $record) {
+                    if (!isset($overridedates[$record->userid])) {
+                        $overridedates[$record->userid] = new \stdClass();
+                    }
+                    if (isset($record->duedate) && $record->duedate > 0) {
+                        $overridedates[$record->userid]->duedate = $record->duedate;
+                    }
+                    if (isset($record->allowsubmissionsfromdate) && $record->allowsubmissionsfromdate > 0) {
+                        $overridedates[$record->userid]->allowsubmissionsfromdate = $record->allowsubmissionsfromdate;
+                    }
+                    if (isset($record->cutoffdate) && $record->cutoffdate > 0) {
+                        $overridedates[$record->userid]->cutoffdate = $record->cutoffdate;
+                    }
+                }
+                error_log('Override dates found: ' . count($overridedates));
+            } catch (\Exception $e) {
+                error_log('Error retrieving override dates: ' . $e->getMessage());
             }
         }
 
@@ -450,9 +477,21 @@ class memberships extends \assignsubmission_ltisubmissions\service_base {
                     'member.field' => 'user_id',
                     'source.value' => $user->id,
                 ],
-                'User.extensionduedate' => ['type' => 'extension_due_date_at_unix',
-                    'member.field' => 'extension_due_date_at_unix',
+                'User.extensionduedate' => ['type' => 'extension_duedate_at_unix',
+                    'member.field' => 'extension_duedate_at_unix',
                     'source.value' => isset($extensiondates[$user->id]) ? $extensiondates[$user->id] : null,
+                ],
+                'User.overrideduedate' => ['type' => 'override_duedate_at_unix',
+                    'member.field' => 'override_duedate_at_unix',
+                    'source.value' => isset($overridedates[$user->id]->duedate) ? $overridedates[$user->id]->duedate : null,
+                ],
+                'User.overrideallowsubmissionsfromdate' => ['type' => 'override_allowsubmissions_at_unix',
+                    'member.field' => 'override_allowsubmissions_at_unix',
+                    'source.value' => isset($overridedates[$user->id]->allowsubmissionsfromdate) ? $overridedates[$user->id]->allowsubmissionsfromdate : null,
+                ],
+                'User.overridecutoffdate' => ['type' => 'override_cutoff_at_unix',
+                    'member.field' => 'override_cutoff_at_unix',
+                    'source.value' => isset($overridedates[$user->id]->cutoffdate) ? $overridedates[$user->id]->cutoffdate : null,
                 ],
                 'Person.sourcedId' => ['type' => 'id',
                     'member.field' => 'lis_person_sourcedid',
@@ -510,7 +549,10 @@ class memberships extends \assignsubmission_ltisubmissions\service_base {
             foreach ($includedcapabilities as $capability) {
                 if (
                     $capability["type"] === "id" ||
-                    $capability["type"] === "extension_due_date_at_unix" ||
+                    $capability["type"] === "extension_duedate_at_unix" ||
+                    $capability["type"] === "override_duedate_at_unix" ||
+                    $capability["type"] === "override_allowsubmissions_at_unix" ||
+                    $capability["type"] === "override_cutoff_at_unix" ||
                     $isallowedlticonfig[$capability["type"]]
                 ) {
                     $member->{$capability["member.field"]} =
