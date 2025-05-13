@@ -477,8 +477,8 @@ class memberships extends \assignsubmission_ltisubmissions\service_base {
                     'member.field' => 'user_id',
                     'source.value' => $user->id,
                 ],
-                'User.extensionduedate' => ['type' => 'extension_duedate_at_unix',
-                    'member.field' => 'extension_duedate_at_unix',
+                'User.extensionduedate' => ['type' => 'extension_due_date_at_unix',
+                    'member.field' => 'extension_due_date_at_unix',
                     'source.value' => isset($extensiondates[$user->id]) ? $extensiondates[$user->id] : null,
                 ],
                 'User.overrideduedate' => ['type' => 'override_due_at_unix',
@@ -549,7 +549,7 @@ class memberships extends \assignsubmission_ltisubmissions\service_base {
             foreach ($includedcapabilities as $capability) {
                 if (
                     $capability["type"] === "id" ||
-                    $capability["type"] === "extension_duedate_at_unix" ||
+                    $capability["type"] === "extension_due_date_at_unix" ||
                     $capability["type"] === "override_due_at_unix" ||
                     $capability["type"] === "override_start_at_unix" ||
                     $capability["type"] === "override_end_at_unix" ||
