@@ -481,16 +481,16 @@ class memberships extends \assignsubmission_ltisubmissions\service_base {
                     'member.field' => 'extension_duedate_at_unix',
                     'source.value' => isset($extensiondates[$user->id]) ? $extensiondates[$user->id] : null,
                 ],
-                'User.overrideduedate' => ['type' => 'override_duedate_at_unix',
-                    'member.field' => 'override_duedate_at_unix',
+                'User.overrideduedate' => ['type' => 'override_due_at_unix',
+                    'member.field' => 'override_due_at_unix',
                     'source.value' => isset($overridedates[$user->id]->duedate) ? $overridedates[$user->id]->duedate : null,
                 ],
-                'User.overrideallowsubmissionsfromdate' => ['type' => 'override_allowsubmissions_at_unix',
-                    'member.field' => 'override_allowsubmissions_at_unix',
+                'User.overrideallowsubmissionsfromdate' => ['type' => 'override_start_at_unix',
+                    'member.field' => 'override_start_at_unix',
                     'source.value' => isset($overridedates[$user->id]->allowsubmissionsfromdate) ? $overridedates[$user->id]->allowsubmissionsfromdate : null,
                 ],
-                'User.overridecutoffdate' => ['type' => 'override_cutoff_at_unix',
-                    'member.field' => 'override_cutoff_at_unix',
+                'User.overridecutoffdate' => ['type' => 'override_end_at_unix',
+                    'member.field' => 'override_end_at_unix',
                     'source.value' => isset($overridedates[$user->id]->cutoffdate) ? $overridedates[$user->id]->cutoffdate : null,
                 ],
                 'Person.sourcedId' => ['type' => 'id',
@@ -550,9 +550,9 @@ class memberships extends \assignsubmission_ltisubmissions\service_base {
                 if (
                     $capability["type"] === "id" ||
                     $capability["type"] === "extension_duedate_at_unix" ||
-                    $capability["type"] === "override_duedate_at_unix" ||
-                    $capability["type"] === "override_allowsubmissions_at_unix" ||
-                    $capability["type"] === "override_cutoff_at_unix" ||
+                    $capability["type"] === "override_due_at_unix" ||
+                    $capability["type"] === "override_start_at_unix" ||
+                    $capability["type"] === "override_end_at_unix" ||
                     $isallowedlticonfig[$capability["type"]]
                 ) {
                     $member->{$capability["member.field"]} =
