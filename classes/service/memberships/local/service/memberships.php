@@ -458,9 +458,7 @@ class memberships extends \assignsubmission_ltisubmissions\service_base {
             $member->roles = explode(',', assignsubmission_ltisubmissions_get_ims_role($user->id, null, $course->id, true));
 
             $instanceconfig = null;
-            // if (!is_null($lti)) {
-            //     $instanceconfig = lti_get_type_config_from_instance($lti->id);
-            // }
+
             if (!$islti2) {
                 $isallowedlticonfig = self::is_allowed_field_set($toolconfig, $instanceconfig,
                     ['name' => 'sendname', 'givenname' => 'sendname',
