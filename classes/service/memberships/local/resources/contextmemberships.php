@@ -74,7 +74,7 @@ class contextmemberships extends \ltiservice_memberships\local\resources\context
                 $lti = $DB->get_record_sql('SELECT ma.id, ma.course, apc.value AS typeid
                     FROM {assign} ma
                     JOIN {assign_plugin_config} apc ON apc.assignment = ma.id WHERE apc.plugin like :plugin
-                    AND apc.name LIKE :name AND apc.subtype LIKE :subtype AND apc.name LIKE :subtype
+                    AND apc.name LIKE :name AND apc.subtype LIKE :subtype
                     AND ma.id = :assignment ',
                     ['plugin' => 'ltisubmissions', 'name' => 'typeid', 'subtype' => 'assignsubmission', 'assignment' => $linkid]);
                 $lti->servicesalt = $DB->get_field('assign_plugin_config', 'value',
