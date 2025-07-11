@@ -333,7 +333,33 @@ class gradebookservices extends service_base {
                     LEFT JOIN {assign_user_flags} auf ON auf.userid = u.id AND auf.assignment = ?
                     WHERE u.id = ? LIMIT 1
                     ", [$modassign, $userid]);
-            $launchparameters['extension_due_date_at_unix'] = $extensionduedate;
+
+            if ($extensionduedate && $extensionduedate > 0) {
+                $launchparameters['override_due_at_unix'] = $extensionduedate;
+            }
+
+            $overridedates = $DB->get_record_sql("
+                    SELECT duedate, allowsubmissionsfromdate, cutoffdate
+                    FROM {assign_overrides}
+                    WHERE assignid = ? AND userid = ?
+                    ", [$modassign, $userid]);
+
+            $override_duedate = null;
+            if ($overridedates) {
+                if (isset($overridedates->duedate) && $overridedates->duedate > 0 && !($extensionduedate && $extensionduedate > 0)) {
+                    $launchparameters['override_due_at_unix'] = $overridedates->duedate;
+                }
+                if (isset($overridedates->allowsubmissionsfromdate) && $overridedates->allowsubmissionsfromdate > 0) {
+                    $launchparameters['override_start_at_unix'] = $overridedates->allowsubmissionsfromdate;
+                }
+                if (isset($overridedates->cutoffdate) && $overridedates->cutoffdate > 0) {
+                    $launchparameters['override_end_at_unix'] = $overridedates->cutoffdate;
+                }
+            }
+
+            if ($extensionduedate && $extensionduedate > 0) {
+                $launchparameters['override_due_at_unix'] = $extensionduedate;
+            }
         }
         return $launchparameters;
     }
