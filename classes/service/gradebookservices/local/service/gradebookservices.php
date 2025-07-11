@@ -360,6 +360,10 @@ class gradebookservices extends service_base {
             if ($extensionduedate && $extensionduedate > 0) {
                 $launchparameters['override_due_at_unix'] = $extensionduedate;
             }
+
+            if (!isset($launchparameters['override_end_at_unix']) && isset($launchparameters['override_due_at_unix'])) {
+                $launchparameters['override_end_at_unix'] = $launchparameters['override_due_at_unix'];
+            }
         }
         return $launchparameters;
     }

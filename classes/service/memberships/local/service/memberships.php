@@ -537,6 +537,8 @@ class memberships extends \assignsubmission_ltisubmissions\service_base {
                 $enddate = isset($overridedates[$user->id]->cutoffdate) ? $overridedates[$user->id]->cutoffdate : null;
                 if (!is_null($enddate)) {
                     $customclaims->override_end_at_unix = $enddate;
+                } else if (!is_null($duedate)) {
+                    $customclaims->override_end_at_unix = $duedate;
                 }
                 if (!empty((array)$customclaims)) {
                     $message->{'https://purl.imsglobal.org/spec/lti/claim/custom'} = $customclaims;
