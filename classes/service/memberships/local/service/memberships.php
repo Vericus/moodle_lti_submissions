@@ -385,53 +385,44 @@ class memberships extends \assignsubmission_ltisubmissions\service_base {
         $islti2 = $tool->toolproxyid > 0;
         $n = 0;
         $more = false;
-        // Create a map of user ID to extension date and override dates
+        // Create a map of user ID to extension date and override dates.
         $extensiondates = [];
         $overridedates = [];
 
         if (isset($lti)) {
-            // Get all extension dates for this assignment in one query
-            try {
-                $records = $DB->get_records_sql("
-                        SELECT userid, extensionduedate
-                        FROM {assign_user_flags}
-                        WHERE assignment = ?
-                        ", [$lti->id]);
-                foreach ($records as $record) {
-                    if (isset($record->extensionduedate) && $record->extensionduedate > 0) {
-                        $extensiondates[$record->userid] = $record->extensionduedate;
-                    }
+            // Get all extension dates for this assignment in one query.
+            $records = $DB->get_records_sql("
+                    SELECT userid, extensionduedate
+                    FROM {assign_user_flags}
+                    WHERE assignment = ?
+                    ", [$lti->id]);
+            foreach ($records as $record) {
+                if (isset($record->extensionduedate) && $record->extensionduedate > 0) {
+                    $extensiondates[$record->userid] = $record->extensionduedate;
                 }
-            } catch (\Exception $e) {
-                error_log('Error retrieving extension dates: ' . $e->getMessage());
             }
 
-            // Get all override dates for this assignment in one query
-            try {
-                $records = $DB->get_records_sql("
-                        SELECT userid, duedate, allowsubmissionsfromdate, cutoffdate
-                        FROM {assign_overrides}
-                        WHERE assignid = ?
-                        ", [$lti->id]);
-                foreach ($records as $record) {
-                    if (!isset($overridedates[$record->userid])) {
-                        $overridedates[$record->userid] = new \stdClass();
-                    }
-                    if (isset($record->duedate) && $record->duedate > 0) {
-                        $overridedates[$record->userid]->duedate = $record->duedate;
-                    }
-                    if (isset($record->allowsubmissionsfromdate) && $record->allowsubmissionsfromdate > 0) {
-                        $overridedates[$record->userid]->allowsubmissionsfromdate = $record->allowsubmissionsfromdate;
-                    }
-                    if (isset($record->cutoffdate) && $record->cutoffdate > 0) {
-                        $overridedates[$record->userid]->cutoffdate = $record->cutoffdate;
-                    }
+            // Get all override dates for this assignment in one query.
+            $records = $DB->get_records_sql("
+                    SELECT userid, duedate, allowsubmissionsfromdate, cutoffdate
+                    FROM {assign_overrides}
+                    WHERE assignid = ?
+                    ", [$lti->id]);
+            foreach ($records as $record) {
+                if (!isset($overridedates[$record->userid])) {
+                    $overridedates[$record->userid] = new \stdClass();
                 }
-            } catch (\Exception $e) {
-                error_log('Error retrieving override dates: ' . $e->getMessage());
+                if (isset($record->duedate) && $record->duedate > 0) {
+                    $overridedates[$record->userid]->duedate = $record->duedate;
+                }
+                if (isset($record->allowsubmissionsfromdate) && $record->allowsubmissionsfromdate > 0) {
+                    $overridedates[$record->userid]->allowsubmissionsfromdate = $record->allowsubmissionsfromdate;
+                }
+                if (isset($record->cutoffdate) && $record->cutoffdate > 0) {
+                    $overridedates[$record->userid]->cutoffdate = $record->cutoffdate;
+                }
             }
         }
-
 
         foreach ($users as $user) {
             if (in_array($user->id, $exclude)) {
@@ -526,11 +517,19 @@ class memberships extends \assignsubmission_ltisubmissions\service_base {
 
                 // Custom claims for override dates.
                 $customclaims = new \stdClass();
-                $duedate = isset($extensiondates[$user->id]) ? $extensiondates[$user->id] : (isset($overridedates[$user->id]->duedate) ? $overridedates[$user->id]->duedate : null);
+                $duedate = isset($extensiondates[$user->id])
+                    ? $extensiondates[$user->id]
+                    : (isset($overridedates[$user->id]->duedate)
+                        ? $overridedates[$user->id]->duedate
+                        : null);
                 if (!is_null($duedate)) {
                     $customclaims->override_due_at_unix = $duedate;
                 }
-                $startdate = isset($overridedates[$user->id]->allowsubmissionsfromdate) ? $overridedates[$user->id]->allowsubmissionsfromdate : null;
+                $startdate = isset(
+                    $overridedates[$user->id]->allowsubmissionsfromdate
+                )
+                    ? $overridedates[$user->id]->allowsubmissionsfromdate
+                    : null;
                 if (!is_null($startdate)) {
                     $customclaims->override_start_at_unix = $startdate;
                 }

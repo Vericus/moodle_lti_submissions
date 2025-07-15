@@ -344,9 +344,12 @@ class gradebookservices extends service_base {
                     WHERE assignid = ? AND userid = ?
                     ", [$modassign, $userid]);
 
-            $override_duedate = null;
             if ($overridedates) {
-                if (isset($overridedates->duedate) && $overridedates->duedate > 0 && !($extensionduedate && $extensionduedate > 0)) {
+                if (
+                    isset($overridedates->duedate) &&
+                    $overridedates->duedate > 0 &&
+                    !($extensionduedate && $extensionduedate > 0)
+                ) {
                     $launchparameters['override_due_at_unix'] = $overridedates->duedate;
                 }
                 if (isset($overridedates->allowsubmissionsfromdate) && $overridedates->allowsubmissionsfromdate > 0) {
