@@ -402,7 +402,6 @@ class memberships extends \assignsubmission_ltisubmissions\service_base {
                         $extensiondates[$record->userid] = $record->extensionduedate;
                     }
                 }
-                error_log('Extension dates found: ' . count($extensiondates));
             } catch (\Exception $e) {
                 error_log('Error retrieving extension dates: ' . $e->getMessage());
             }
@@ -428,7 +427,6 @@ class memberships extends \assignsubmission_ltisubmissions\service_base {
                         $overridedates[$record->userid]->cutoffdate = $record->cutoffdate;
                     }
                 }
-                error_log('Override dates found: ' . count($overridedates));
             } catch (\Exception $e) {
                 error_log('Error retrieving override dates: ' . $e->getMessage());
             }
@@ -474,18 +472,6 @@ class memberships extends \assignsubmission_ltisubmissions\service_base {
                 'User.id' => ['type' => 'id',
                     'member.field' => 'user_id',
                     'source.value' => $user->id,
-                ],
-                'User.overrideduedate' => ['type' => 'override_due_at_unix',
-                    'member.field' => 'override_due_at_unix',
-                    'source.value' => isset($extensiondates[$user->id]) ? $extensiondates[$user->id] : (isset($overridedates[$user->id]->duedate) ? $overridedates[$user->id]->duedate : null),
-                ],
-                'User.overrideallowsubmissionsfromdate' => ['type' => 'override_start_at_unix',
-                    'member.field' => 'override_start_at_unix',
-                    'source.value' => isset($overridedates[$user->id]->allowsubmissionsfromdate) ? $overridedates[$user->id]->allowsubmissionsfromdate : null,
-                ],
-                'User.overridecutoffdate' => ['type' => 'override_end_at_unix',
-                    'member.field' => 'override_end_at_unix',
-                    'source.value' => isset($overridedates[$user->id]->cutoffdate) ? $overridedates[$user->id]->cutoffdate : null,
                 ],
                 'Person.sourcedId' => ['type' => 'id',
                     'member.field' => 'lis_person_sourcedid',
@@ -537,15 +523,33 @@ class memberships extends \assignsubmission_ltisubmissions\service_base {
                     $basicoutcome->lis_outcome_service_url = $serviceurl;
                     $message->{'https://purl.imsglobal.org/spec/lti-bo/claim/basicoutcome'} = $basicoutcome;
                 }
+
+                // Custom claims for override dates.
+                $customclaims = new \stdClass();
+                $duedate = isset($extensiondates[$user->id]) ? $extensiondates[$user->id] : (isset($overridedates[$user->id]->duedate) ? $overridedates[$user->id]->duedate : null);
+                if (!is_null($duedate)) {
+                    $customclaims->override_due_at_unix = $duedate;
+                }
+                $startdate = isset($overridedates[$user->id]->allowsubmissionsfromdate) ? $overridedates[$user->id]->allowsubmissionsfromdate : null;
+                if (!is_null($startdate)) {
+                    $customclaims->override_start_at_unix = $startdate;
+                }
+                $enddate = isset($overridedates[$user->id]->cutoffdate) ? $overridedates[$user->id]->cutoffdate : null;
+                if (!is_null($enddate)) {
+                    $customclaims->override_end_at_unix = $enddate;
+                } else if (!is_null($duedate)) {
+                    $customclaims->override_end_at_unix = $duedate;
+                }
+                if (!empty((array)$customclaims)) {
+                    $message->{'https://purl.imsglobal.org/spec/lti/claim/custom'} = $customclaims;
+                }
+
                 $member->message = [$message];
             }
 
             foreach ($includedcapabilities as $capability) {
                 if (
                     $capability["type"] === "id" ||
-                    $capability["type"] === "override_due_at_unix" ||
-                    $capability["type"] === "override_start_at_unix" ||
-                    $capability["type"] === "override_end_at_unix" ||
                     $isallowedlticonfig[$capability["type"]]
                 ) {
                     $member->{$capability["member.field"]} =

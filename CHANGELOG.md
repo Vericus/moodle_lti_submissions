@@ -1,5 +1,8 @@
 # LTI Submissions Plugin
 
+## 2025-07-10
+- Move override dates to custom claims in nrps as per ims specifcation.
+
 ## 2025-05-02
 - Allows option to set manual grant attempts in asessment settings. If selected, then submissions will be available after the due date in Moodle Grader
 - Passes the grant attempt type and max attempts to members list response now via nrps.
