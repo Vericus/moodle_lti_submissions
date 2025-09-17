@@ -1,5 +1,8 @@
 # LTI Submissions Plugin
 
+## 2025-09-17
+- Make HTTP requests using Moodle's curl class to support proxies [#15](https://github.com/Vericus/moodle_lti_submissions/pull/15)
+
 ## 2025-07-16
 - Adds override extension dates to custom claims in memberlist api as per ims specifcation
 
