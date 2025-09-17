@@ -241,7 +241,11 @@ class assign_submission_ltisubmissions extends \assign_submission_plugin {
             $filerecord['filepath'] = '/';
             $filerecord['filename'] = $submissioninfo->content_items[0]->title;
 
-            $content = file_get_contents($url);
+            $curl = new \curl();
+            $content = $curl->get($url);
+            if ($curl->errno != 0) {
+                return false;
+            }
             $file = $fs->create_file_from_string($filerecord, $content);
 
             $params = [
@@ -304,10 +308,16 @@ class assign_submission_ltisubmissions extends \assign_submission_plugin {
      * @return bool
      */
     public function submission_is_empty(stdClass $data) {
+        global $CFG;
+        require_once($CFG->libdir . '/filelib.php');
         $return = true;
         if (isset($data->{'https://api.cadmus.io/lti/submission'}->content_items[0]->url)) {
             try {
-                $content = file_get_contents($data->{'https://api.cadmus.io/lti/submission'}->content_items[0]->url);
+                $curl = new \curl();
+                $content = $curl->get($data->{'https://api.cadmus.io/lti/submission'}->content_items[0]->url);
+                if ($curl->errno != 0) {
+                    return true;
+                }
                 if (!empty($content)) {
                     $return = false;
                 }
