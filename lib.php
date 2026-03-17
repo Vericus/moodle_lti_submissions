@@ -275,7 +275,12 @@ function assignsubmission_ltisubmissions_get_launch_data($instance, $nonce = '',
 
     $requestparams['launch_presentation_return_url'] = $returnurl;
 
-    // Add the parameters configured by the LTI services.
+    // Add plugin version and the parameters configured by the LTI services.
+    $pluginversion = get_config('assignsubmission_ltisubmissions', 'version');
+    if (!empty($pluginversion)) {
+        $requestparams['custom_moodle_plugin_version'] = (string)$pluginversion;
+    }
+
     if ($typeid && !$islti2) {
         $services = assignsubmission_ltisubmissions_get_services();
         foreach ($services as $service) {
