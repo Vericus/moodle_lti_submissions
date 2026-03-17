@@ -1,7 +1,7 @@
 # LTI Submissions Plugin
 
 ## 2026-03-16 
-- Update plugin incompatibility version to Moodle 5.13
+- Update plugin incompatibility version to Moodle 502
 
 ## 2025-09-17
 - Make HTTP requests using Moodle's curl class to support proxies [#15](https://github.com/Vericus/moodle_lti_submissions/pull/15)
