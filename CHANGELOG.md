@@ -1,5 +1,8 @@
 # LTI Submissions Plugin
 
+## 2026-09-30 
+- Update plugin incompatibility version to Moodle 503
+
 ## 2026-03-16 
 - Update plugin incompatibility version to Moodle 502
 - Adds plugin version to custom params
