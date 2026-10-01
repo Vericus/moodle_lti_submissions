@@ -63,7 +63,6 @@ class memberships extends \assignsubmission_ltisubmissions\service_base {
         parent::__construct();
         $this->id = 'memberships';
         $this->name = get_string($this->get_component_id(), $this->get_component_id());
-
     }
     /**
      * Get the resources for this service.
@@ -78,7 +77,6 @@ class memberships extends \assignsubmission_ltisubmissions\service_base {
             $this->resources[] = new \assignsubmission_ltisubmissions\service\memberships\local\resources\linkmemberships($this);
         }
         return $this->resources;
-
     }
     /**
      * Get the scope(s) permitted for the tool relevant to this service.
@@ -89,13 +87,14 @@ class memberships extends \assignsubmission_ltisubmissions\service_base {
 
         $scopes = [];
         $ok = !empty($this->get_type());
-        if ($ok && isset($this->get_typeconfig()[$this->get_component_id()]) &&
-            ($this->get_typeconfig()[$this->get_component_id()] == parent::SERVICE_ENABLED)) {
+        if (
+            $ok && isset($this->get_typeconfig()[$this->get_component_id()]) &&
+            ($this->get_typeconfig()[$this->get_component_id()] == parent::SERVICE_ENABLED)
+        ) {
             $scopes[] = self::SCOPE_MEMBERSHIPS_READ;
         }
 
         return $scopes;
-
     }
     /**
      * Get the scope(s) defined by this service.
@@ -168,14 +167,24 @@ class memberships extends \assignsubmission_ltisubmissions\service_base {
             if ($role === self::CONTEXT_ROLE_INSTRUCTOR) {
                 $withcapability = self::INSTRUCTOR_CAPABILITY;
             } else if ($role === self::CONTEXT_ROLE_LEARNER) {
-                $exclude = array_keys(get_enrolled_users($context, self::INSTRUCTOR_CAPABILITY, 0, 'u.id',
-                    null, null, null, true));
+                $exclude = array_keys(get_enrolled_users(
+                    $context,
+                    self::INSTRUCTOR_CAPABILITY,
+                    0,
+                    'u.id',
+                    null,
+                    null,
+                    null,
+                    false
+                ));
             }
         }
-        $users = get_enrolled_users($context, $withcapability, 0, 'u.*', null, 0, 0, true);
-        if (($response->get_accept() === 'application/vnd.ims.lti-nrps.v2.membershipcontainer+json') ||
+        $users = get_enrolled_users($context, $withcapability, 0, 'u.*', null, 0, 0, false);
+        if (
+            ($response->get_accept() === 'application/vnd.ims.lti-nrps.v2.membershipcontainer+json') ||
             (($response->get_accept() !== 'application/vnd.ims.lis.v2.membershipcontainer+json') &&
-                ($this->get_type()->ltiversion === LTI_VERSION_1P3))) {
+                ($this->get_type()->ltiversion === LTI_VERSION_1P3))
+        ) {
             $json = $this->users_to_json($resource, $users, $course, $exclude, $limitfrom, $limitnum, $lti, $info, $response);
         } else {
             $json = $this->users_to_jsonld($resource, $users, $course->id, $exclude, $limitfrom, $limitnum, $lti, $info, $response);
@@ -202,8 +211,17 @@ class memberships extends \assignsubmission_ltisubmissions\service_base {
      *
      * @return string
      */
-    private function users_to_jsonld($resource, $users, $contextid, $exclude, $limitfrom, $limitnum,
-        $lti, $info, $response) {
+    private function users_to_jsonld(
+        $resource,
+        $users,
+        $contextid,
+        $exclude,
+        $limitfrom,
+        $limitnum,
+        $lti,
+        $info,
+        $response
+    ) {
         global $DB;
 
         $tool = $this->get_type();
@@ -255,8 +273,11 @@ class memberships extends \assignsubmission_ltisubmissions\service_base {
             if (!is_null($lti)) {
                 $instanceconfig = lti_get_type_config_from_instance($lti->id);
             }
-            $isallowedlticonfig = self::is_allowed_field_set($toolconfig, $instanceconfig,
-                ['name' => 'sendname', 'email' => 'sendemailaddr']);
+            $isallowedlticonfig = self::is_allowed_field_set(
+                $toolconfig,
+                $instanceconfig,
+                ['name' => 'sendname', 'email' => 'sendemailaddr']
+            );
 
             $includedcapabilities = [
                 'User.id' => [
@@ -304,10 +325,12 @@ class memberships extends \assignsubmission_ltisubmissions\service_base {
                 ];
 
                 if (!empty($lti->servicesalt) && $DB->record_exists('grade_items', $conditions)) {
-                    $message->lis_result_sourcedid = json_encode(lti_build_sourcedid($lti->id,
+                    $message->lis_result_sourcedid = json_encode(lti_build_sourcedid(
+                        $lti->id,
                         $user->id,
                         $lti->servicesalt,
-                        $lti->typeid));
+                        $lti->typeid
+                    ));
                     // Not per specification but added to comply with earlier version of the service.
                     $member->resultSourcedId = $message->lis_result_sourcedid;
                 }
@@ -320,9 +343,11 @@ class memberships extends \assignsubmission_ltisubmissions\service_base {
                         $member->{$capability['member.field']} = $capability['source.value'];
                     }
                 } else {
-                    if (($capability['type'] === 'id')
+                    if (
+                        ($capability['type'] === 'id')
                         || ($capability['type'] === 'name' && $isallowedlticonfig['name'])
-                        || ($capability['type'] === 'email' && $isallowedlticonfig['email'])) {
+                        || ($capability['type'] === 'email' && $isallowedlticonfig['email'])
+                    ) {
                         $member->{$capability['member.field']} = $capability['source.value'];
                     }
                 }
@@ -364,8 +389,17 @@ class memberships extends \assignsubmission_ltisubmissions\service_base {
      *
      * @return string
      */
-    private function users_to_json($resource, $users, $course, $exclude, $limitfrom, $limitnum,
-        $lti, $info, $response) {
+    private function users_to_json(
+        $resource,
+        $users,
+        $course,
+        $exclude,
+        $limitfrom,
+        $limitnum,
+        $lti,
+        $info,
+        $response
+    ) {
         global $DB, $CFG;
 
         $tool = $this->get_type();
@@ -449,15 +483,20 @@ class memberships extends \assignsubmission_ltisubmissions\service_base {
             $instanceconfig = null;
 
             if (!$islti2) {
-                $isallowedlticonfig = self::is_allowed_field_set($toolconfig, $instanceconfig,
+                $isallowedlticonfig = self::is_allowed_field_set(
+                    $toolconfig,
+                    $instanceconfig,
                     ['name' => 'sendname', 'givenname' => 'sendname',
                         'familyname' => 'sendname', 'email' => 'sendemailaddr',
-                    ]);
+                    ]
+                );
             } else {
-                $isallowedlticonfig = self::is_allowed_capability_set($tool,
+                $isallowedlticonfig = self::is_allowed_capability_set(
+                    $tool,
                     ['name' => 'Person.name.full', 'givenname' => 'Person.name.given',
                         'familyname' => 'Person.name.family', 'email' => 'Person.email.primary',
-                    ]);
+                    ]
+                );
             }
             $includedcapabilities = [
                 'User.id' => ['type' => 'id',
@@ -582,8 +621,10 @@ class memberships extends \assignsubmission_ltisubmissions\service_base {
         $isallowedstate = [];
         foreach ($fields as $key => $field) {
             $allowed = isset($toolconfig[$field]) && (self::ALWAYS_INCLUDE_FIELD == $toolconfig[$field]);
-            if (!$allowed && isset($toolconfig[$field]) && (self::DELEGATE_TO_INSTRUCTOR == $toolconfig[$field]) &&
-                !is_null($instanceconfig)) {
+            if (
+                !$allowed && isset($toolconfig[$field]) && (self::DELEGATE_TO_INSTRUCTOR == $toolconfig[$field]) &&
+                !is_null($instanceconfig)
+            ) {
                 $allowed = isset($instanceconfig->{"lti_{$field}"}) &&
                     ($instanceconfig->{"lti_{$field}"} == self::INSTRUCTOR_INCLUDED);
             }
