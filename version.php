@@ -24,7 +24,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version = 2026093000;
+$plugin->version = 2026101600;
 $plugin->requires = 2023100900;
 $plugin->component = 'assignsubmission_ltisubmissions';
 $plugin->incompatible = 503;

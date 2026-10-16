@@ -1,19 +1,29 @@
 # LTI Submissions Plugin
 
-## 2026-09-30 
-- Update plugin incompatibility version to Moodle 503
+## 2026-10-16
 
-## 2026-03-16 
+- Revert the inclusion of inactive users in the members list response via nrps. Inactive users should not be included in the members list response as it can includes massive list when a course is long living across terms.
+
+## 2026-09-30
+
+- Update plugin incompatibility version to Moodle 503
+- Include inactive users in the members list response via nrps.
+
+## 2026-03-16
+
 - Update plugin incompatibility version to Moodle 502
 - Adds plugin version to custom params
 
 ## 2025-09-17
+
 - Make HTTP requests using Moodle's curl class to support proxies [#15](https://github.com/Vericus/moodle_lti_submissions/pull/15)
 
 ## 2025-07-16
+
 - Adds override extension dates to custom claims in memberlist api as per ims specifcation
 
 ## 2025-05-02
+
 - Allows option to set manual grant attempts in asessment settings. If selected, then submissions will be available after the due date in Moodle Grader
 - Passes the grant attempt type and max attempts to members list response now via nrps.
 
@@ -33,13 +43,13 @@
 
 ## 2024-12-20
 
-- Update code to pass code update new code style guide for moodle 4.5 by @isubasti in https://github.com/Vericus/moodle_lti_submissions/pull/4
+- Update code to pass code update new code style guide for moodle 4.5 by @isubasti in <https://github.com/Vericus/moodle_lti_submissions/pull/4>
 
-* **Relax version so only 5.0 onwards is incompatible**
-* Tests has been updated as per the issue [[MOODLE-81520](https://tracker.moodle.org/browse/MDL-81520)](https://tracker.moodle.org/browse/MDL-81520)
-* Minor code-checker fixes for errors/warnings raised.
-* End-to-end testing has been done on local moodle setup.
-* Plugin is compatible with Moodle 4.5.
+- **Relax version so only 5.0 onwards is incompatible**
+- Tests has been updated as per the issue [[MOODLE-81520](https://tracker.moodle.org/browse/MDL-81520)](<https://tracker.moodle.org/browse/MDL-81520>)
+- Minor code-checker fixes for errors/warnings raised.
+- End-to-end testing has been done on local moodle setup.
+- Plugin is compatible with Moodle 4.5.
 
 ## 2024-09-04
 
