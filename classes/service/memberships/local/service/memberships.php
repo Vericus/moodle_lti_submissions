@@ -175,11 +175,11 @@ class memberships extends \assignsubmission_ltisubmissions\service_base {
                     null,
                     null,
                     null,
-                    false
+                    true
                 ));
             }
         }
-        $users = get_enrolled_users($context, $withcapability, 0, 'u.*', null, 0, 0, false);
+        $users = get_enrolled_users($context, $withcapability, 0, 'u.*', null, 0, 0, true);
         if (
             ($response->get_accept() === 'application/vnd.ims.lti-nrps.v2.membershipcontainer+json') ||
             (($response->get_accept() !== 'application/vnd.ims.lis.v2.membershipcontainer+json') &&
